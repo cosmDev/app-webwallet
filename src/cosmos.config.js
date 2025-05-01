@@ -5,8 +5,9 @@ let allTokensData = [];
 
 const fetchChainToken = async () => {
   try {
-    const response = await axios.get("http://cosmdev.com:1317/cosmos/bank/v1beta1/supply");
-    
+    const response = await axios.get(
+      "http://cosmdev.com:1317/cosmos/bank/v1beta1/supply",
+    );
 
     const tokens = response.data.supply;
     for (const token of tokens) {

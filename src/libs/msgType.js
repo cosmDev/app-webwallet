@@ -9,20 +9,18 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
   // console.log(all)
 
   switch (finalType) {
-    case "/cosmos.bank.v1beta1.MsgSend": 
-  
+    case "/cosmos.bank.v1beta1.MsgSend":
       const found = cosmosConfig[0].allTokensData.find(
-        (item) => item.denom === data.amount[0].denom
+        (item) => item.denom === data.amount[0].denom,
       );
       if (found) {
         data.amount[0].denom = found.viewDenom;
-      } 
- 
+      }
+
       if (data.to_address === addrGet) {
         titleMsg = "Receive";
-      } else 
-      titleMsg = "Send";
-      
+      } else titleMsg = "Send";
+
       finalData = {
         from: {
           data: data.from_address,

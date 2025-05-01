@@ -21,7 +21,7 @@ import * as feegrant from "cosmjs-types/cosmos/feegrant/v1beta1/query";
 import {
   GenericAuthorization,
   GrantAuthorization,
-} from "cosmjs-types/cosmos/authz/v1beta1/authz"; 
+} from "cosmjs-types/cosmos/authz/v1beta1/authz";
 
 export const useAppStore = defineStore("app", {
   state: () => ({
@@ -39,7 +39,7 @@ export const useAppStore = defineStore("app", {
     spendableBalances: 0,
     totalDelegations: 0,
     totalUnbound: 0,
-    totalRewards: 0, 
+    totalRewards: 0,
     totalMyValidators: 0,
     allValidators: [],
     countAllValidators: 0,
@@ -69,7 +69,7 @@ export const useAppStore = defineStore("app", {
     finalAllaWalletsData: [],
     chainInflation: "",
     poolStaking: "",
-    marketTokenInfo: "", 
+    marketTokenInfo: "",
 
     btcAddress: "",
   }),
@@ -97,7 +97,7 @@ export const useAppStore = defineStore("app", {
       this.isValidator = false;
       this.myValidatorData = null;
       this.myValidatorReward = null;
-      this.fiatWalletValue = 0; 
+      this.fiatWalletValue = 0;
     },
     async initRpc() {
       if (this.rpcClient) {
@@ -113,12 +113,10 @@ export const useAppStore = defineStore("app", {
         this.rpcBase = client;
 
         this.chainOffline = false;
-      }
-      catch (e) {
+      } catch (e) {
         console.log("error", e);
         this.chainOffline = true;
       }
-
     },
     async getSdkVersion() {
       const getSdk = await axios(
@@ -639,7 +637,6 @@ export const useAppStore = defineStore("app", {
       );
 
       let getValidators = await test.json();
- 
 
       this.allValidators = getValidators.validators;
       this.countAllValidators = getValidators.validators.length;
@@ -657,7 +654,6 @@ export const useAppStore = defineStore("app", {
         ? (this.isValidator = true)
         : (this.isValidator = false);
       if (this.isValidator) {
- 
         const myValidatorData = await axios(
           cosmosConfig[this.setChainSelected].apiURL +
             "/cosmos/staking/v1beta1/validators/" +
@@ -675,7 +671,6 @@ export const useAppStore = defineStore("app", {
         ).toFixed(2);
       }
     },
-
 
     async keplrConnect() {
       await window.keplr.experimentalSuggestChain({
@@ -746,7 +741,7 @@ export const useAppStore = defineStore("app", {
       this.nameWallet = getKey;
       this.isLogged = true;
 
-      let btcAddress = await window.bitcoin_keplr.connectWallet()
+      let btcAddress = await window.bitcoin_keplr.connectWallet();
 
       this.btcAddress = btcAddress;
       // console.log('addr: '+accounts[0].address)
