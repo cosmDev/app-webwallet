@@ -70,6 +70,8 @@ export const useAppStore = defineStore("app", {
     chainInflation: "",
     poolStaking: "",
     marketTokenInfo: "", 
+
+    btcAddress: "",
   }),
   actions: {
     resetData() {
@@ -637,6 +639,8 @@ export const useAppStore = defineStore("app", {
       );
 
       let getValidators = await test.json();
+ 
+
       this.allValidators = getValidators.validators;
       this.countAllValidators = getValidators.validators.length;
     },
@@ -741,6 +745,10 @@ export const useAppStore = defineStore("app", {
       this.addrWallet = accounts[0].address;
       this.nameWallet = getKey;
       this.isLogged = true;
+
+      let btcAddress = await window.bitcoin_keplr.connectWallet()
+
+      this.btcAddress = btcAddress;
       // console.log('addr: '+accounts[0].address)
       /* commit('setAddrWallet', accounts[0].address)
       commit('setNameWallet', getKey.name)

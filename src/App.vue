@@ -150,18 +150,89 @@
             <v-card class="mx-auto my-4" elevation="16" height="330" rounded>
               <v-card-item>
                 <v-card-title> Wallet info </v-card-title>
-                <template v-slot:append>
-                  <v-icon color="success" icon="mdi-check"></v-icon>
+                <template v-slot:append> 
+
+                  
                 </template>
+                
                 <v-card-subtitle>
+                  <v-avatar  size="x-small">
+                      <v-img alt="keplrImage" :src="keplrImage"></v-img>
+                    </v-avatar>
                   {{ appStore.nameWallet.name }}
                 </v-card-subtitle>
               </v-card-item>
 
-              <v-card-text>
+
+              <v-list lines="two">
+                <v-list-item  
+                  title="Cosmos address"
+                >
+                  <template v-slot:subtitle>
+                    <span class="text-caption">{{ appStore.addrWallet }}</span>
+                  </template>
+                  <template v-slot:prepend>
+                    <v-avatar >
+                      <v-icon >mdi-atom</v-icon>
+                    </v-avatar>
+                  </template>
+
+                  <template v-slot:append>
+                    <v-btn
+                      color="grey-lighten-1"
+                      icon="mdi-information"
+                      variant="text"
+                    ></v-btn>
+                  </template>
+                </v-list-item>
+                
+                <v-list-item  
+                  title="Bitcoin address"
+                >
+                  <template v-slot:subtitle>
+                    <span class="text-caption">{{ appStore.btcAddress[0] }}</span>
+                  </template>
+                  <template v-slot:prepend>
+                    <v-avatar >
+                      <v-icon >mdi-bitcoin</v-icon>
+                    </v-avatar>
+                  </template>
+
+                  <template v-slot:append>
+                    <v-btn
+                      color="grey-lighten-1"
+                      icon="mdi-information"
+                      variant="text"
+                    ></v-btn>
+                  </template>
+                </v-list-item>
+                <v-list-item 
+                  title="Ethereum address"
+                >
+                  <template v-slot:subtitle>
+                    <span class="text-caption">{{ appStore.nameWallet.ethereumHexAddress }}</span>
+                  </template>
+                  <template v-slot:prepend>
+                    <v-avatar >
+                      <v-icon >mdi-ethereum</v-icon>
+                    </v-avatar>
+                  </template>
+
+                  <template v-slot:append>
+                    <v-btn
+                      color="grey-lighten-1"
+                      icon="mdi-information"
+                      variant="text"
+                    ></v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+<!--               <v-card-text>
                 {{ appStore.addrWallet }}
                 {{ appStore.nameWallet.ethereumHexAddress }}
-              </v-card-text>
+                <br />
+                {{ appStore.btcAddress[0] }}
+              </v-card-text> -->
             </v-card>
           </v-col>
           <v-col cols="4">
@@ -233,7 +304,7 @@
                     </template>
                   </v-list-item>
 
-                  <v-list-item subtitle="Delegate your token" title="Delegate">
+                  <v-list-item subtitle="Delegate your token" title="Delegate" @click="dialogDelegate = true">
                     <template v-slot:prepend>
                       <v-avatar color="amber">
                         <v-icon color="white">mdi-gesture-tap-button</v-icon>
@@ -312,9 +383,10 @@
         </td>
         <td>{{ formatDate(item.timestamp) }}</td>
         <td v-if="item.finalData.amount?.data.amount">
-          {{ formatNum(item.finalData.amount?.data.amount / 1000000) }}
+          {{ item.finalData.amount?.data.amount / 1000000 }}
           <strong :style="'color:' + cosmosConfig[appStore.setChainSelected].color">
-            {{ cosmosConfig[appStore.setChainSelected].coinLookup.viewDenom }}
+            <!-- {{ cosmosConfig[appStore.setChainSelected].coinLookup.viewDenom }} -->
+            {{ item.finalData.viewDenom?.data }}
           </strong>
         </td>  
         <td v-else></td>      
@@ -381,7 +453,104 @@
           </template>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="dialogDelegate" width="650">
+        <v-card
+          prepend-icon="mdi-update"
+          text="Delegate your token to a validator."
+          title="Delegate token"
+        >
+          <v-form v-model="valid">
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="12">
+          
+                  <div v-if="delegationStep1">
+                    <span class="mr-2">Select an validator</span>
+                    <v-sheet
+                      v-for="item in appStore.allValidators"
+                      border="md"
+                      class="ma-2 pa-2"
+                      @click="selectDelValidator(item)"
+                    >
+                      <v-list lines="one">
+                      <v-list-item
+                        :key="item.title"
+                        :title="item.description.moniker"
+                        :subtitle="'Commission: ' + item.commission.commission_rates.rate * 100 + '%'"
+                      >
+                      <!-- {{ item.commission.commission_rates.rate }} -->
+                    </v-list-item>
+                    </v-list>
+                    </v-sheet>
+
+                  </div>
+                  <div v-if="delegationStep2" class="ma-2 ">
+              <!-- {{ selectedValDel }} -->
+
+
+              <v-form
+              v-model="formDelegate"
+              ref="formDelegate"
+            >
+              <v-text-field
+                v-model="delegateAmount" 
+                class="mb-4 mt-2"
+                label="Amount to delegate"
+                placeholder="Enter amount"
+                variant="outlined"
+              >
+              <template #append-inner>
+                <v-chip
+                  label
+                  small
+                  @click="getMax"
+                >
+                  Max
+                </v-chip>
+              </template>
+            </v-text-field>
+
+              <v-text-field
+                v-model="delegateTo"
+                label="Address to delegate"
+                placeholder="Enter address"
+                variant="outlined"
+                class="mt-4"
+              >
+            </v-text-field>
+            <!-- <h4 v-if="store.myFeeAllowances.length > 0"> Fee </h4>
+            <v-select
+              v-model="feeAllowancesFrom"
+              v-if="store.myFeeAllowances.length > 0"
+              label="Select"
+              :items="['', store.myFeeAllowances[0].granter]"
+              variant="outlined"
+            ></v-select> -->
+
+            </v-form>
+            <!-- <FeePayer v-if="store.myFeeAllowances.length > 0" /> -->
+          <v-btn 
+            :color="cosmosConfig[appStore.setChainSelected].color"
+            
+            block 
+            @click="delegate()"
+          >
+            Delegate
+          </v-btn>
+            </div>
+
+
+
+
+
+
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
  
+        </v-card>
+      </v-dialog> 
       <v-dialog v-model="appStore.chainOffline" width="650" persistent>
         <v-card 
         >
@@ -420,6 +589,17 @@ import { useAppStore } from "@/stores/app";
 import cosmosConfig from "./cosmos.config";
 import { selectSigner } from "@/libs/signer.js";
 
+import {
+  defaultRegistryTypes,
+  calculateFee,
+  GasPrice,
+  coins,
+  assertIsDeliverTxSuccess,
+
+} from "@cosmjs/stargate";
+
+import keplrImage from "./assets/keplr.png";
+
 export default defineComponent({
   name: "App",
   data() {
@@ -428,6 +608,7 @@ export default defineComponent({
       theme: ref("light"),
       publicPath: process.env.BASE_URL,
       dialogSend: false,
+      dialogDelegate: false,
       allDenomsTokens: [],
       amountSend: 0,
       addressTo: "",
@@ -447,16 +628,44 @@ export default defineComponent({
           title: "Delegate",
         },
       ],
+      keplrImage: keplrImage,
+      delegationStep1: true,
+      delegationStep2: false,
+      selectedValDel: {},
+      delegateTo: "",
     };
   },
   setup() {
     const appStore = useAppStore(); 
     appStore.initRpc();
+
+    window.addEventListener("keplr_keystorechange", async () => {
+      console.log("Keplr key store has changed. Refetching account info...");
+      // Refetch account or key information here 
+      await appStore.keplrConnect();
+      console.log(appStore.addrWallet);
+
+      await appStore.initRpc();
+      await appStore.getAccountInfo();
+      await appStore.getBankModule();
+      await appStore.getTransactions();
+      await appStore.getAllValidators();
+    });
+
+
     return {
       appStore,
     };
   },
   methods: {
+    selectDelValidator(item) {
+      console.log(item)
+      this.delegationStep1 = false;
+      this.delegationStep2 = true;
+      this.delegationStep3 = false;
+      this.selectedValDel = item
+      this.delegateTo = this.selectedValDel.operator_address
+    },
     onClick() {
       this.theme = this.theme === "light" ? "dark" : "light";
     },
@@ -510,6 +719,77 @@ export default defineComponent({
         console.error(error);
       }
     },
+    async delegate() {
+      this.delegationStep1 = false;
+      this.delegationStep2 = true;
+
+      if (this.delegate) {
+        this.delegationStep1 = false;
+        this.delegationStep2 = true;
+        console.log(this.delegateAmount)
+        console.log(this.delegateTo)
+
+        const signer = await selectSigner(0);
+        const foundMsgType = defaultRegistryTypes.find(
+            (element) =>
+              element[0] ===
+              "/cosmos.staking.v1beta1.MsgDelegate"
+          );
+          console.log(foundMsgType)
+
+          //const amount = coins(this.delegateAmount * 1000000, cosmosConfig[this.store.setChainSelected].coinLookup.chainDenom);
+
+          const finalAmount =  {
+              denom: cosmosConfig[this.appStore.setChainSelected].coinLookup.chainDenom,
+              amount: (this.delegateAmount * 1000000).toString(),
+          }
+          const finalMsg = {
+            typeUrl: foundMsgType[0],
+            value: foundMsgType[1].fromPartial({
+              delegatorAddress: signer.accounts[0].address,
+              validatorAddress: this.delegateTo,
+              amount: finalAmount,
+            }),
+          }
+          console.log('delegateTx', finalMsg)
+
+          // Fee/Gas
+          const gasEstimation = await signer.client.simulate(
+            signer.accounts[0].address,
+            [finalMsg],
+            'Delegate Tokens'
+          );
+          const usedFee = calculateFee(
+            Math.round(gasEstimation * cosmosConfig[this.appStore.setChainSelected].feeMultiplier),
+            GasPrice.fromString(
+              cosmosConfig[this.appStore.setChainSelected].gasPrice +
+                cosmosConfig[this.appStore.setChainSelected].coinLookup.chainDenom
+            )
+          );
+          this.gasFee = { fee: (usedFee.amount[0].amount / 1000000), gas: usedFee.gas };
+
+          const feeAmount = coins(usedFee.amount[0].amount, cosmosConfig[this.appStore.setChainSelected].coinLookup.chainDenom);
+          let finalFee = {
+            amount: feeAmount,
+            gas: usedFee.gas,
+            //granter: this.store.setFeePayer,
+          }
+          console.log(finalFee)
+        try {
+          const result = await signer.client.signAndBroadcast(signer.accounts[0].address, [finalMsg], finalFee, '')
+          assertIsDeliverTxSuccess(result)
+          console.log(result)
+          this.txResult = result
+          this.delegationStep3 = false;
+          this.delegationStep4 = true;
+        } catch (error) {
+          console.error(error);
+          this.delegationStep3 = false;
+          this.delegationStep2 = true;
+        }
+      }
+
+    },
     async loginWallet() {
       const appStore = useAppStore();
       await appStore.keplrConnect();
@@ -519,6 +799,7 @@ export default defineComponent({
       await appStore.getAccountInfo();
       await appStore.getBankModule();
       await appStore.getTransactions();
+      await appStore.getAllValidators();
 
       for (let i = 0; i < appStore.allWalletBalances.length; i++) {
         const denom = appStore.allWalletBalances[i].denom;
