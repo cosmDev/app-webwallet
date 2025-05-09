@@ -388,7 +388,7 @@ export default defineComponent({
         console.log("No wallet balances found.");
 
         await axios
-          .get(`http://cosmdev.com:3420/faucet/chaindev/${appStore.addrWallet}`)
+          .get(`https://cosmos-api.cosmdev.com/faucet/chaindev/${appStore.addrWallet}`)
           .then(async (response) => {
             console.log("Faucet response:", response.data);
             await appStore.getAccountInfo();
