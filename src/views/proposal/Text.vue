@@ -194,7 +194,7 @@ export default {
       .then((data) => {
         console.log("Module parameters:", data);
         this.govConfig = data;
-        this.proposalMinDeposit = data.deposit_params.min_deposit[0].amount;
+        this.proposalMinDeposit = data.deposit_params.min_deposit[0].amount / 1000000;
         // Process the parameters as needed
       })
       .catch((error) => {

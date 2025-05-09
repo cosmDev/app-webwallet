@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row class="mt-4">
       <v-col cols="12" md="2"> </v-col>
 
       <v-col cols="12" md="8">
@@ -44,9 +44,10 @@
                 border
                 prepend-icon="mdi-update"
                 text="Create a software upgrade proposal"
-                title="Software upgrade"
+                title="Software upgrade (soon)"
                 class="ma-2"
                 @click="proposalTypeSelected = 'software-upgrade'"
+                disabled="true"
               ></v-card>
             </v-col>
 
@@ -55,9 +56,10 @@
                 border
                 prepend-icon="mdi-close-circle-outline"
                 text="Create a cancel software upgrade proposal"
-                title="Cancel software upgrade"
+                title="Cancel software upgrade (soon)"
                 class="ma-2"
                 @click="proposalTypeSelected = 'cancel-software-upgrade'"
+                disabled="true"
               ></v-card>
             </v-col>
             <v-col cols="12" md="4">
@@ -65,9 +67,10 @@
                 border
                 prepend-icon="mdi-application-braces-outline"
                 text="Create an other proposal type"
-                title="Other proposal type"
+                title="Other proposal type (soon)"
                 class="ma-2"
                 @click="proposalTypeSelected = 'other'"
+                disabled="true"
               ></v-card>
             </v-col>
           </v-row>

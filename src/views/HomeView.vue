@@ -124,14 +124,14 @@
                         >
                           <td>{{ item.denom }}</td>
                           <td>{{ item.amount }}</td>
-                          <!--                           <td>
-                            ${{
+                          <td>
+                            $0<!-- {{
                               (
                                 item.amount *
                                 appStore.allPrice["chihuahua-token"].usd
                               ).toFixed(0)
-                            }}
-                          </td> -->
+                            }} -->
+                          </td>
                         </tr>
                       </tbody>
                     </v-table>
@@ -169,8 +169,7 @@
                               ).toFixed(8)
                             }}
                           </td>
-
-                          <td><v-btn>testr</v-btn></td>
+ 
                         </tr>
                       </tbody>
                     </v-table>
@@ -201,10 +200,7 @@
         >
           <v-card-item>
             <v-card-title> Wallet actions </v-card-title>
-            <template v-slot:append>
-              <v-icon color="success" icon="mdi-check"></v-icon>
-            </template>
-            <v-card-subtitle> Card subtitle secondary text </v-card-subtitle>
+ 
           </v-card-item>
 
           <v-card-text v-if="appStore.isLogged === true">

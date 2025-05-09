@@ -69,7 +69,7 @@
               <v-toolbar class="mt-2">
                 <template v-slot:prepend>
                   <span class="text-h6 font-weight-bold pa-2"
-                    >community Spend pool {{ index + 1 }}</span
+                    >Community Spend pool {{ index + 1 }}</span
                   >
                 </template>
 

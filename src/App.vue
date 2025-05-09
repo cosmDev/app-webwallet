@@ -389,11 +389,10 @@ export default defineComponent({
 
         await axios
           .get(`https://cosmos-api.cosmdev.com/faucet/chaindev/${appStore.addrWallet}`)
-          .then(async (response) => {
+          .then((response) => {
             console.log("Faucet response:", response.data);
-            await appStore.getAccountInfo();
-            await appStore.getBankModule();
-            await appStore.getTransactions();
+            appStore.getBankModule();
+            appStore.getTransactions();
           })
           .catch((error) => {
             console.error("Error fetching faucet data:", error);
