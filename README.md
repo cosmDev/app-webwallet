@@ -1,6 +1,7 @@
 # app-webwallet
 
-This project is a web wallet application built using Vue 3 and Vite. It provides a foundation for developing modern, fast, and scalable web applications.
+This project is a web wallet application built using Vue 3 and Vite, designed specifically for interacting with the Cosmos SDK. It provides a foundation for developing modern, fast, and scalable web applications that integrate seamlessly with the Cosmos blockchain ecosystem.
+
 
 ## Features
 
