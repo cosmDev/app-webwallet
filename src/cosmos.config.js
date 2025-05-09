@@ -6,7 +6,7 @@ let allTokensData = [];
 const fetchChainToken = async () => {
   try {
     const response = await axios.get(
-      "http://cosmdev.com:1317/cosmos/bank/v1beta1/supply",
+      "https://chain-lcd.cosmdev.com/cosmos/bank/v1beta1/supply",
     );
 
     const tokens = response.data.supply;
@@ -36,8 +36,8 @@ export default [
     chainId: igniteConfig.chainID,
     name: igniteConfig.chainID,
     desc: "Description for " + igniteConfig.chainID,
-    apiURL: "http://cosmdev.com:1317",
-    rpcURL: "http://cosmdev.com:26657",
+    apiURL: "https://chain-lcd.cosmdev.com",
+    rpcURL: "https://chain-rpc.cosmdev.com",
     coinLookup: {
       viewDenom: igniteConfig.chainViewdenom,
       chainDenom: igniteConfig.chainDenom,
