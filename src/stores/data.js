@@ -304,7 +304,6 @@ export const useAppStore = defineStore("app", {
         await queryDistrib.DelegatorWithdrawAddress({
           delegatorAddress: this.addrWallet,
         });
-      // console.log('DelegatorWithdrawAddress', queryWithdrawAddressResult)
       this.myDelegatorWithdrawAddress =
         queryWithdrawAddressResult.withdrawAddress;
     },
@@ -313,8 +312,6 @@ export const useAppStore = defineStore("app", {
       const queryAuthzResult = await queryAuthz.GranterGrants({
         granter: this.addrWallet,
       });
-
-      // console.log('Authz', queryAuthzResult)
 
       for (let i = 0; i < queryAuthzResult.grants.length; i++) {
         queryAuthzResult.grants[i].finaleAuthzType =
@@ -345,9 +342,6 @@ export const useAppStore = defineStore("app", {
     },
     async getAllProps() {
       // List of proposal from the blockchain
-      console.log("getAllProps");
-      console.log("this.sdkVersion", this.sdkVersion);
-
       let finalVersion = "v1";
       if (this.sdkVersion.substring(0, 5) === "v0.47") {
         finalVersion = "v1";
@@ -566,8 +560,6 @@ export const useAppStore = defineStore("app", {
 
       this.lastTransactions = push_array;
 
-      // console.log(finalSyntax)
-      //this.lastTransactions = finalTxs
     },
     async getChainStats() {
       const inflation = await axios(
@@ -760,20 +752,9 @@ export const useAppStore = defineStore("app", {
       let getNetwork = await window.bitcoin_keplr.getNetwork();
       let getAccounts = await window.bitcoin_keplr.getAccounts();
 
-      console.log("btcAddress", btcAddress);
-      console.log("btcAmount", btcAmount);
-
-      console.log("getAccounts", getAccounts);
-
-      console.log("btcData", window.bitcoin_keplr);
-
       this.btcAddress = btcAddress;
       this.btcAmount = btcAmount;
 
-      // console.log('addr: '+accounts[0].address)
-      /* commit('setAddrWallet', accounts[0].address)
-      commit('setNameWallet', getKey.name)
-      dispatch('getAccountData') */
     },
   },
 });

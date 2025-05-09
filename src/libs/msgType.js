@@ -39,11 +39,9 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
           name: "View Denom",
         },
       };
-      //console.log(finalData)
       break;
     case "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission":
       titleMsg = "Withdraw Validator";
-      //console.log(data)
       finalData = data;
       finalData = {
         validator_address: {
@@ -64,11 +62,9 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
           name: "Reward from",
         },
       };
-      //console.log(data)
       break;
     case "/cosmos.staking.v1beta1.MsgDelegate":
       titleMsg = "Delegate";
-      console.log(data);
       finalData = {
         from: {
           data: data.delegator_address,
@@ -86,7 +82,6 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
       break;
     case "/cosmos.staking.v1beta1.MsgBeginRedelegate":
       titleMsg = "Redelegate";
-      //console.log(finalData)
       break;
     case "/cosmos.staking.v1beta1.MsgUndelegate":
       titleMsg = "Undelegate";
@@ -219,7 +214,10 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
       titleMsg = "Tokenfactory burn";
       //console.log(finalData)
       break;
-
+    case "/cosmos.gov.v1.MsgSubmitProposal":
+      titleMsg = "Submit Proposal";
+      //console.log(finalData)
+      break;
     default:
       console.log("Sorry, dont know " + finalType + ".");
   }

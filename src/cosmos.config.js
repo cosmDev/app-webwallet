@@ -27,10 +27,6 @@ const fetchChainToken = async () => {
 
 fetchChainToken();
 
-console.log("Tokens Info:", allTokensData);
-
-console.log(igniteConfig);
-
 export default [
   {
     chainId: igniteConfig.chainID,
