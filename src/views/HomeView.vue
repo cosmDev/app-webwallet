@@ -536,16 +536,22 @@ export default defineComponent({
       delegateTo: "",
     };
   },
+  watch: {
+    dialogSend(newVal) {
+      this.allDenomsTokens = [];
+      const appStore = useAppStore();
+      for (let i = 0; i < appStore.allWalletBalances.length; i++) {
+        const denom = appStore.allWalletBalances[i].denom;
+        this.allDenomsTokens.push(denom);
+      }
+    },
+  },
   setup() {
     const appStore = useAppStore();
     appStore.initRpc();
 
     window.addEventListener("keplr_keystorechange", async () => {
-      console.log("Keplr key store has changed. Refetching account info...");
-      // Refetch account or key information here
       await appStore.keplrConnect();
-      console.log(appStore.addrWallet);
-
       await appStore.initRpc();
       await appStore.getAccountInfo();
       await appStore.getBankModule();
@@ -557,9 +563,11 @@ export default defineComponent({
       appStore,
     };
   },
+  mounted() {
+
+  },
   methods: {
     selectDelValidator(item) {
-      console.log(item);
       this.delegationStep1 = false;
       this.delegationStep2 = true;
       this.delegationStep3 = false;
@@ -571,6 +579,9 @@ export default defineComponent({
     },
     async sendToken() {
       const appStore = useAppStore();
+
+
+      
       const signer = await selectSigner(0);
       const finalMsg = {
         typeUrl: "/cosmos.bank.v1beta1.MsgSend",
@@ -594,14 +605,7 @@ export default defineComponent({
         ],
         gas: "200000",
       };
-      console.log("finalMsg", finalMsg);
-
       this.dialogSend = true;
-
-      console.log("amountSend", this.amountSend);
-      console.log("addressTo", this.addressTo);
-      console.log("denom", this.denom);
-
       try {
         const result = await signer.client.signAndBroadcast(
           signer.accounts[0].address,
@@ -609,8 +613,6 @@ export default defineComponent({
           finalFee,
           "",
         );
-        //assertIsDeliverTxSuccess(result)
-        console.log(result);
         await appStore.getTransactions();
         await appStore.getBankModule();
         this.txResult = result;
@@ -625,17 +627,11 @@ export default defineComponent({
       if (this.delegate) {
         this.delegationStep1 = false;
         this.delegationStep2 = true;
-        console.log(this.delegateAmount);
-        console.log(this.delegateTo);
 
         const signer = await selectSigner(0);
         const foundMsgType = defaultRegistryTypes.find(
           (element) => element[0] === "/cosmos.staking.v1beta1.MsgDelegate",
         );
-        console.log(foundMsgType);
-
-        //const amount = coins(this.delegateAmount * 1000000, cosmosConfig[this.store.setChainSelected].coinLookup.chainDenom);
-
         const finalAmount = {
           denom:
             cosmosConfig[this.appStore.setChainSelected].coinLookup.chainDenom,
@@ -649,7 +645,6 @@ export default defineComponent({
             amount: finalAmount,
           }),
         };
-        console.log("delegateTx", finalMsg);
 
         // Fee/Gas
         const gasEstimation = await signer.client.simulate(
@@ -682,7 +677,6 @@ export default defineComponent({
           gas: usedFee.gas,
           //granter: this.store.setFeePayer,
         };
-        console.log(finalFee);
         try {
           const result = await signer.client.signAndBroadcast(
             signer.accounts[0].address,
@@ -690,7 +684,6 @@ export default defineComponent({
             finalFee,
             "",
           );
-          assertIsDeliverTxSuccess(result);
           console.log(result);
           this.txResult = result;
           this.delegationStep3 = false;
@@ -705,22 +698,11 @@ export default defineComponent({
     async loginWallet() {
       const appStore = useAppStore();
       await appStore.keplrConnect();
-      console.log(appStore.addrWallet);
-
       await appStore.initRpc();
       await appStore.getAccountInfo();
       await appStore.getBankModule();
       await appStore.getTransactions();
       await appStore.getAllValidators();
-
-      for (let i = 0; i < appStore.allWalletBalances.length; i++) {
-        const denom = appStore.allWalletBalances[i].denom;
-        this.allDenomsTokens.push(denom);
-      }
-
-      console.log(appStore.spendableBalances);
-      console.log(appStore.allWalletBalances);
-      console.log(appStore.nameWallet);
     },
     formatDate(date) {
       const options = {
