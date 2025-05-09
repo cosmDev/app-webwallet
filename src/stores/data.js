@@ -72,6 +72,9 @@ export const useAppStore = defineStore("app", {
     marketTokenInfo: "",
 
     btcAddress: "",
+    btcAmount: 0,
+
+    finalGroupPropMsg: [],
   }),
   actions: {
     resetData() {
@@ -132,10 +135,7 @@ export const useAppStore = defineStore("app", {
       this.sdkVersion = getSdk.data.application_version.cosmos_sdk_version;
     },
     async getAllPrice() {
-      let allChainPrice = [];
-      for (let i of cosmosConfig) {
-        if (i.coingeckoId !== "") allChainPrice += i.coingeckoId + ",";
-      }
+      let allChainPrice = ["chihuahua-token", "bitcoin", "ethereum"];
 
       const allPrice = await axios(
         "https://api.coingecko.com/api/v3/simple/price?ids=" +
@@ -181,13 +181,18 @@ export const useAppStore = defineStore("app", {
       this.marketTokenInfo = getTokenInfo.data;
     },
     async getAccountInfo() {
-      const getAccountInfo = await axios(
-        cosmosConfig[this.setChainSelected].apiURL +
-          "/cosmos/auth/v1beta1/accounts/" +
-          this.addrWallet,
-      );
+      try {
+        const getAccountInfo = await axios(
+          cosmosConfig[this.setChainSelected].apiURL +
+            "/cosmos/auth/v1beta1/accounts/" +
+            this.addrWallet,
+        );
 
-      this.accountInfo = getAccountInfo.data.account;
+        this.accountInfo = getAccountInfo.data.account;
+      } catch (e) {
+        console.log("error", e);
+        this.accountInfo = null;
+      }
     },
     async getWalletAmount() {
       let totalToken =
@@ -340,7 +345,10 @@ export const useAppStore = defineStore("app", {
     },
     async getAllProps() {
       // List of proposal from the blockchain
-      let finalVersion = "v1beta1";
+      console.log("getAllProps");
+      console.log("this.sdkVersion", this.sdkVersion);
+
+      let finalVersion = "v1";
       if (this.sdkVersion.substring(0, 5) === "v0.47") {
         finalVersion = "v1";
       }
@@ -348,7 +356,7 @@ export const useAppStore = defineStore("app", {
         cosmosConfig[this.setChainSelected].apiURL +
           "/cosmos/gov/" +
           finalVersion +
-          "/proposals?pagination.limit=12&pagination.reverse=true",
+          "/proposals?pagination.limit=12", // &pagination.reverse=true
       );
       const communityPool = await axios(
         cosmosConfig[this.setChainSelected].apiURL +
@@ -369,6 +377,11 @@ export const useAppStore = defineStore("app", {
             proposal_id: element.id,
             title: element.title,
             status: element.status,
+            submit_time: element.submit_time,
+            voting_start_time: element.voting_start_time,
+            voting_end_time: element.voting_end_time,
+            deposit_end_time: element.deposit_end_time,
+            failed_reason: element.failed_reason,
             final_tally_result: {
               yes: element.final_tally_result.yes_count,
               no: element.final_tally_result.no_count,
@@ -742,8 +755,21 @@ export const useAppStore = defineStore("app", {
       this.isLogged = true;
 
       let btcAddress = await window.bitcoin_keplr.connectWallet();
+      let btcAmount = await window.bitcoin_keplr.getBalance();
+
+      let getNetwork = await window.bitcoin_keplr.getNetwork();
+      let getAccounts = await window.bitcoin_keplr.getAccounts();
+
+      console.log("btcAddress", btcAddress);
+      console.log("btcAmount", btcAmount);
+
+      console.log("getAccounts", getAccounts);
+
+      console.log("btcData", window.bitcoin_keplr);
 
       this.btcAddress = btcAddress;
+      this.btcAmount = btcAmount;
+
       // console.log('addr: '+accounts[0].address)
       /* commit('setAddrWallet', accounts[0].address)
       commit('setNameWallet', getKey.name)

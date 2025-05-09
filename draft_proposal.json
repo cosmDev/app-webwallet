@@ -1,0 +1,20 @@
+{
+ "messages": [
+  {
+   "@type": "/cosmos.upgrade.v1beta1.MsgSoftwareUpgrade",
+   "authority": "chihuahua10d07y265gmmuvt4z0w9aw880jnsr700jeh7th3",
+   "plan": {
+    "name": "",
+    "time": "0001-01-01T00:00:00Z",
+    "height": "0",
+    "info": "",
+    "upgraded_client_state": null
+   }
+  }
+ ],
+ "metadata": "ipfs://CID",
+ "deposit": "123465uhuahua",
+ "title": "test",
+ "summary": "test",
+ "expedited": false
+}

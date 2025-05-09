@@ -8,31 +8,33 @@
         variant="flat"
       ></v-avatar>
 
-      <v-btn class="me-2" color="grey" height="40" variant="flat">Home</v-btn>
-
-      <v-btn disabled class="me-2" color="grey" height="40" variant="flat"
+      <v-btn class="me-2" height="40" variant="outlined" to="/">Home</v-btn>
+      <v-btn class="me-2" height="40" variant="outlined" to="/create-proposal"
+        >Create proposal</v-btn
+      >
+      <v-btn class="me-2" height="40" variant="outlined" to="/all-proposals"
+        >All proposals</v-btn
+      >
+      <v-btn disabled class="me-2" height="40" variant="outlined"
         >Delegations</v-btn
       >
 
-      <v-btn disabled class="me-2" color="grey" height="40" variant="flat"
-        >Authz</v-btn
-      >
+      <v-btn disabled class="me-2" height="40" variant="outlined">Authz</v-btn>
 
-      <v-btn disabled class="me-2" color="grey" height="40" variant="flat"
+      <v-btn disabled class="me-2" height="40" variant="outlined"
         >Feegrant</v-btn
       >
 
       <v-spacer></v-spacer>
       <v-btn
         v-if="appStore.isLogged === false"
-        color="grey"
         class="me-2"
         height="40"
-        variant="flat"
+        variant="outlined"
         @click="loginWallet"
         >Not connected</v-btn
       >
-      <v-btn v-else class="me-2" color="grey" height="40" variant="flat">{{
+      <v-btn v-else class="me-2" height="40" variant="outlined">{{
         appStore.nameWallet.name
       }}</v-btn>
       <v-btn
@@ -145,428 +147,16 @@
     </v-navigation-drawer> -->
 
     <v-main>
-      <v-container fluid>
-        <v-row v-if="appStore.isLogged === true">
-          <v-col cols="4">
-            <v-card class="mx-auto my-4" elevation="16" height="330" rounded>
-              <v-card-item>
-                <v-card-title> Wallet info </v-card-title>
-                <template v-slot:append> </template>
-
-                <v-card-subtitle>
-                  <v-avatar size="x-small">
-                    <v-img alt="keplrImage" :src="keplrImage"></v-img>
-                  </v-avatar>
-                  {{ appStore.nameWallet.name }}
-                </v-card-subtitle>
-              </v-card-item>
-
-              <v-list lines="two">
-                <v-list-item title="Cosmos address">
-                  <template v-slot:subtitle>
-                    <span class="text-caption">{{ appStore.addrWallet }}</span>
-                  </template>
-                  <template v-slot:prepend>
-                    <v-avatar>
-                      <v-icon>mdi-atom</v-icon>
-                    </v-avatar>
-                  </template>
-
-                  <template v-slot:append>
-                    <v-btn
-                      color="grey-lighten-1"
-                      icon="mdi-information"
-                      variant="text"
-                    ></v-btn>
-                  </template>
-                </v-list-item>
-
-                <v-list-item title="Bitcoin address">
-                  <template v-slot:subtitle>
-                    <span class="text-caption">{{
-                      appStore.btcAddress[0]
-                    }}</span>
-                  </template>
-                  <template v-slot:prepend>
-                    <v-avatar>
-                      <v-icon>mdi-bitcoin</v-icon>
-                    </v-avatar>
-                  </template>
-
-                  <template v-slot:append>
-                    <v-btn
-                      color="grey-lighten-1"
-                      icon="mdi-information"
-                      variant="text"
-                    ></v-btn>
-                  </template>
-                </v-list-item>
-                <v-list-item title="Ethereum address">
-                  <template v-slot:subtitle>
-                    <span class="text-caption">{{
-                      appStore.nameWallet.ethereumHexAddress
-                    }}</span>
-                  </template>
-                  <template v-slot:prepend>
-                    <v-avatar>
-                      <v-icon>mdi-ethereum</v-icon>
-                    </v-avatar>
-                  </template>
-
-                  <template v-slot:append>
-                    <v-btn
-                      color="grey-lighten-1"
-                      icon="mdi-information"
-                      variant="text"
-                    ></v-btn>
-                  </template>
-                </v-list-item>
-              </v-list>
-              <!--               <v-card-text>
-                {{ appStore.addrWallet }}
-                {{ appStore.nameWallet.ethereumHexAddress }}
-                <br />
-                {{ appStore.btcAddress[0] }}
-              </v-card-text> -->
-            </v-card>
-          </v-col>
-          <v-col cols="4">
-            <v-card class="mx-auto my-4" elevation="16" height="330" rounded>
-              <v-card-item>
-                <v-card-title> Wallet tokens </v-card-title>
-                <template v-slot:append>
-                  {{ appStore.allWalletBalances.length }} TOKENS
-                </template>
-                <v-card-subtitle>
-                  Card subtitle secondary text
-                </v-card-subtitle>
-              </v-card-item>
-
-              <v-card-text v-if="appStore.isLogged === true">
-                <v-table>
-                  <thead>
-                    <tr>
-                      <th class="text-left">Name</th>
-                      <th class="text-left">Amount</th>
-                      <th class="text-left">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in appStore.allWalletBalances"
-                      :key="item.name"
-                    >
-                      <td>{{ item.denom }}</td>
-                      <td>{{ item.amount }}</td>
-                      <td>$0</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="4">
-            <v-card class="mx-auto my-4" elevation="16" height="330" rounded>
-              <v-card-item>
-                <v-card-title> Wallet actions </v-card-title>
-                <template v-slot:append>
-                  <v-icon color="success" icon="mdi-check"></v-icon>
-                </template>
-                <v-card-subtitle>
-                  Card subtitle secondary text
-                </v-card-subtitle>
-              </v-card-item>
-
-              <v-card-text v-if="appStore.isLogged === true">
-                <v-list lines="two">
-                  <v-list-item
-                    subtitle="Send any tokens"
-                    title="Send token"
-                    @click="dialogSend = true"
-                  >
-                    <template v-slot:prepend>
-                      <v-avatar color="blue">
-                        <v-icon color="white">mdi-clipboard-text</v-icon>
-                      </v-avatar>
-                    </template>
-
-                    <template v-slot:append>
-                      <v-btn
-                        color="grey-lighten-1"
-                        icon="mdi-information"
-                        variant="text"
-                      ></v-btn>
-                    </template>
-                  </v-list-item>
-
-                  <v-list-item
-                    subtitle="Delegate your token"
-                    title="Delegate"
-                    @click="dialogDelegate = true"
-                  >
-                    <template v-slot:prepend>
-                      <v-avatar color="amber">
-                        <v-icon color="white">mdi-gesture-tap-button</v-icon>
-                      </v-avatar>
-                    </template>
-
-                    <template v-slot:append>
-                      <v-btn
-                        color="grey-lighten-1"
-                        icon="mdi-information"
-                        variant="text"
-                      ></v-btn>
-                    </template>
-                  </v-list-item>
-                  <v-list-item subtitle="Token rewards" title="Token rewards">
-                    <template v-slot:prepend>
-                      <v-avatar color="green">
-                        <v-icon color="white">mdi-information</v-icon>
-                      </v-avatar>
-                    </template>
-
-                    <template v-slot:append>
-                      <v-btn
-                        color="grey-lighten-1"
-                        icon="mdi-information"
-                        variant="text"
-                      ></v-btn>
-                    </template>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-container fluid>
-        <v-sheet
-          v-if="appStore.isLogged === true"
-          border
-          class="ma-2 pa-2"
-          rounded="lg"
-        >
-          <v-row no-gutters>
-            <v-col cols="12" sm="6">
-              <v-sheet class="text-h6 pa-2">Last 10 transactions</v-sheet>
-            </v-col>
-          </v-row>
-          <v-table>
-            <thead>
-              <tr>
-                <th class="text-left">Tx type</th>
-                <th class="text-left">Date</th>
-                <th class="text-left">Data</th>
-                <th class="text-left">State</th>
-                <th class="text-left"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in appStore.lastTransactions" :key="item.name">
-                <td>
-                  <v-chip
-                    class="ma-2"
-                    :color="cosmosConfig[appStore.setChainSelected].color"
-                    label
-                    variant="outlined"
-                    >{{ item.titleMsg }}
-                  </v-chip>
-                </td>
-                <td>{{ formatDate(item.timestamp) }}</td>
-                <td v-if="item.finalData.amount?.data.amount">
-                  {{ item.finalData.amount?.data.amount / 1000000 }}
-                  <strong
-                    :style="
-                      'color:' + cosmosConfig[appStore.setChainSelected].color
-                    "
-                  >
-                    <!-- {{ cosmosConfig[appStore.setChainSelected].coinLookup.viewDenom }} -->
-                    {{ item.finalData.viewDenom?.data }}
-                  </strong>
-                </td>
-                <td v-else></td>
-                <td>
-                  <v-icon
-                    v-if="item.code === 0"
-                    color="success"
-                    icon="mdi-check-bold"
-                  ></v-icon>
-                  <v-icon v-else color="error" icon="mdi-close-thick"></v-icon>
-                </td>
-                <td>
-                  <v-chip
-                    :color="cosmosConfig[appStore.setChainSelected].color"
-                    class="ma-2"
-                    label
-                    :to="
-                      '/transactions/' +
-                      cosmosConfig[appStore.setChainSelected].slot +
-                      '/' +
-                      item.txhash
-                    "
-                  >
-                    View detail
-                  </v-chip>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-sheet>
-      </v-container>
-      <v-dialog v-model="dialogSend" width="650">
-        <v-card
-          prepend-icon="mdi-update"
-          text="Send any token of your chain."
-          title="Send token"
-        >
-          <v-form v-model="valid">
-            <v-container>
-              <v-row>
-                <v-col cols="12" md="8">
-                  <div class="text-body-1">Amount to send</div>
-                  <v-text-field
-                    v-model="amountSend"
-                    variant="outlined"
-                    required
-                  ></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="4">
-                  <div class="text-body-1">Select token</div>
-                  <v-select
-                    v-model="denom"
-                    :items="allDenomsTokens"
-                    variant="outlined"
-                  ></v-select>
-                </v-col>
-                <v-col cols="12" md="12">
-                  <div class="text-body-1">Send to</div>
-                  <v-text-field
-                    v-model="addressTo"
-                    variant="outlined"
-                    required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-form>
-          <template v-slot:actions>
-            <v-btn class="ms-auto" text="Ok" @click="sendToken()"></v-btn>
-          </template>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="dialogDelegate" width="650">
-        <v-card
-          prepend-icon="mdi-update"
-          text="Delegate your token to a validator."
-          title="Delegate token"
-        >
-          <v-form v-model="valid">
-            <v-container>
-              <v-row>
-                <v-col cols="12" md="12">
-                  <div v-if="delegationStep1">
-                    <span class="mr-2">Select an validator</span>
-                    <v-sheet
-                      v-for="item in appStore.allValidators"
-                      border="md"
-                      class="ma-2 pa-2"
-                      @click="selectDelValidator(item)"
-                    >
-                      <v-list lines="one">
-                        <v-list-item
-                          :key="item.title"
-                          :title="item.description.moniker"
-                          :subtitle="
-                            'Commission: ' +
-                            item.commission.commission_rates.rate * 100 +
-                            '%'
-                          "
-                        >
-                          <!-- {{ item.commission.commission_rates.rate }} -->
-                        </v-list-item>
-                      </v-list>
-                    </v-sheet>
-                  </div>
-                  <div v-if="delegationStep2" class="ma-2">
-                    <!-- {{ selectedValDel }} -->
-
-                    <v-form v-model="formDelegate" ref="formDelegate">
-                      <v-text-field
-                        v-model="delegateAmount"
-                        class="mb-4 mt-2"
-                        label="Amount to delegate"
-                        placeholder="Enter amount"
-                        variant="outlined"
-                      >
-                        <template #append-inner>
-                          <v-chip label small @click="getMax"> Max </v-chip>
-                        </template>
-                      </v-text-field>
-
-                      <v-text-field
-                        v-model="delegateTo"
-                        label="Address to delegate"
-                        placeholder="Enter address"
-                        variant="outlined"
-                        class="mt-4"
-                      >
-                      </v-text-field>
-                      <!-- <h4 v-if="store.myFeeAllowances.length > 0"> Fee </h4>
-            <v-select
-              v-model="feeAllowancesFrom"
-              v-if="store.myFeeAllowances.length > 0"
-              label="Select"
-              :items="['', store.myFeeAllowances[0].granter]"
-              variant="outlined"
-            ></v-select> -->
-                    </v-form>
-                    <!-- <FeePayer v-if="store.myFeeAllowances.length > 0" /> -->
-                    <v-btn
-                      :color="cosmosConfig[appStore.setChainSelected].color"
-                      block
-                      @click="delegate()"
-                    >
-                      Delegate
-                    </v-btn>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-form>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="appStore.chainOffline" width="650" persistent>
-        <v-card>
-          <v-empty-state icon="mdi-alert-circle-outline" color="error">
-            <template v-slot:headline>
-              <div class="text-h4">Your blockchain is not online.</div>
-            </template>
-
-            <template v-slot:title>
-              <div class="text-h6">
-                To start your blockchain, run this command:
-              </div>
-            </template>
-
-            <template v-slot:text>
-              <div class="text-medium-emphasis text-caption">
-                <code>ignite chain serve</code>
-              </div>
-
-              <p class="mt-4">And refresh this page.</p>
-            </template>
-          </v-empty-state>
-        </v-card>
-      </v-dialog>
+      <RouterView />
     </v-main>
   </v-app>
 </template>
 <script>
 import { ref, defineComponent } from "vue";
-import { useAppStore } from "@/stores/app";
+import { useAppStore } from "@/stores/data";
 import cosmosConfig from "./cosmos.config";
 import { selectSigner } from "@/libs/signer.js";
+import axios from "axios";
 
 import {
   defaultRegistryTypes,
@@ -615,19 +205,18 @@ export default defineComponent({
   },
   setup() {
     const appStore = useAppStore();
-    appStore.initRpc();
-
     window.addEventListener("keplr_keystorechange", async () => {
       console.log("Keplr key store has changed. Refetching account info...");
-      // Refetch account or key information here
-      await appStore.keplrConnect();
       console.log(appStore.addrWallet);
-
-      await appStore.initRpc();
+      await appStore.keplrConnect();
       await appStore.getAccountInfo();
       await appStore.getBankModule();
       await appStore.getTransactions();
       await appStore.getAllValidators();
+    });
+    window.addEventListener("keplr_bitcoinAccountsChanged", async () => {
+      await appStore.keplrConnect();
+      console.log(appStore.btcAddress[0]);
     });
 
     return {
@@ -789,6 +378,28 @@ export default defineComponent({
       await appStore.getBankModule();
       await appStore.getTransactions();
       await appStore.getAllValidators();
+      await appStore.getAllPrice();
+
+      console.log(
+        "appStore.allWalletBalances.length",
+        appStore.allWalletBalances.length,
+      );
+      if (appStore.allWalletBalances.length === 0) {
+        console.log("No wallet balances found.");
+
+        await axios
+          .get(`http://cosmdev.com:3420/faucet/chaindev/${appStore.addrWallet}`)
+          .then(async (response) => {
+            console.log("Faucet response:", response.data);
+            await appStore.getAccountInfo();
+            await appStore.getBankModule();
+            await appStore.getTransactions();
+          })
+          .catch((error) => {
+            console.error("Error fetching faucet data:", error);
+          });
+        return;
+      }
 
       for (let i = 0; i < appStore.allWalletBalances.length; i++) {
         const denom = appStore.allWalletBalances[i].denom;

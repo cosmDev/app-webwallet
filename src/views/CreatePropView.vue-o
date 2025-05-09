@@ -1,0 +1,1318 @@
+<template>
+ 
+  <v-container>
+    <v-row>
+      <v-col cols="12" md="2">
+        <v-sheet rounded="lg">
+          <!--  -->
+        </v-sheet>
+      </v-col>
+
+      <v-col cols="12" md="8">
+        <v-sheet rounded="lg">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-card
+                border
+                prepend-icon="mdi-tooltip-text-outline"
+                text="Create a text proposal onchain"
+                title="Text proposal"
+                class="ma-2"
+                @click="proposalType = 'text'"
+              ></v-card>
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-card
+                border
+                prepend-icon="mdi-cash-multiple"
+                text="Create a community pool spend proposal"
+                title="Community pool spend"
+                class="ma-2"
+                @click="proposalType = 'community-pool-spend'"
+              ></v-card>
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-card
+                border
+                prepend-icon="mdi-update"
+                text="Create a software upgrade proposal"
+                title="Software upgrade"
+                class="ma-2"
+                @click="proposalType = 'software-upgrade'"
+              ></v-card>
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-card
+                border
+                prepend-icon="mdi-close-circle-outline"
+                text="Create a cancel software upgrade proposal"
+                title="Cancel software upgrade"
+                class="ma-2"
+                @click="proposalType = 'cancel-software-upgrade'"
+              ></v-card>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-card
+                border
+                prepend-icon="mdi-application-braces-outline"
+                text="Create an other proposal type"
+                title="Other proposal type"
+                class="ma-2"
+                @click="proposalType = 'other'"
+              ></v-card>
+            </v-col>
+          </v-row>
+        </v-sheet>
+      </v-col>
+
+      <v-col cols="12" md="2">
+        <v-sheet rounded="lg">
+          <!--  -->
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+  <v-container> 
+    <v-row v-if="proposalType === 'text'">
+      <v-col cols="12" md="2"></v-col>
+      <v-col cols="12" md="8">
+        <v-sheet rounded="lg">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-sheet border class="ma-2" rounded="lg">
+                <v-toolbar class="rounded-t-lg">
+                  <v-toolbar-title>Proposal Text config</v-toolbar-title>
+                </v-toolbar> 
+                <div class="mt-4 pa-2">
+                  <v-text-field
+                    v-model="proposalTitle" 
+                    label="Proposal title"
+                    variant="outlined"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="proposalSummary" 
+                    label="Proposal summary"
+                    variant="outlined"
+                    required
+                  ></v-text-field>
+                  <v-textarea v-model="proposalDescription" label="Label" variant="outlined"></v-textarea>
+                  <v-text-field
+                    v-model="proposalMinDeposit" 
+                    label="Minimum deposit"
+                    variant="outlined"
+                    required
+                  ></v-text-field>
+                </div>
+              </v-sheet>
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-sheet border class="ma-2" rounded="lg">
+                <v-toolbar class="rounded-t-lg">
+                  <v-toolbar-title >Proposal preview</v-toolbar-title>
+                </v-toolbar>
+                <MarkdownRenderer 
+                  :source="proposalDescription" 
+                  :title="'## '+proposalTitle + ' \n---'"
+                  :summary="proposalSummary"
+                />
+              </v-sheet>
+            </v-col>
+          </v-row>
+        </v-sheet>
+      </v-col>
+      <v-col cols="12" md="2"></v-col>
+    </v-row>
+    <v-row v-if="proposalType === 'community-pool-spend'">
+      <v-col cols="12" md="2"></v-col>
+      <v-col cols="12" md="8">
+        <v-sheet rounded="lg">
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-sheet border class="ma-2" rounded="lg">
+                <v-toolbar class="rounded-t-lg">
+                  <v-toolbar-title>Proposal community pool spend</v-toolbar-title>
+                </v-toolbar> 
+                <div class="mt-4 pa-2">
+                  <v-text-field
+                    v-model="proposalTitle" 
+                    label="Proposal title"
+                    variant="outlined"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="proposalSummary" 
+                    label="Proposal summary"
+                    variant="outlined"
+                    required
+                  ></v-text-field>
+                  <v-textarea v-model="proposalDescription" label="Label" variant="outlined"></v-textarea>
+                  <v-text-field
+                    v-model="proposalMinDeposit" 
+                    label="Minimum deposit"
+                    variant="outlined"
+                    required
+                  ></v-text-field>
+                </div>
+              </v-sheet>
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-sheet border class="ma-2" rounded="lg">
+                <v-toolbar class="rounded-t-lg">
+                  <v-toolbar-title >Proposal preview</v-toolbar-title>
+                </v-toolbar>
+                <MarkdownRenderer 
+                  :source="proposalDescription" 
+                  :title="'## '+proposalTitle + ' \n---'"
+                  :summary="proposalSummary"
+                />
+              </v-sheet>
+            </v-col>
+          </v-row>
+        </v-sheet>
+      </v-col>
+      <v-col cols="12" md="2"></v-col>
+    </v-row>
+    <v-row v-if="proposalType === 'other'">
+      <v-col cols="2">
+        <!-- <GroupDetailMenu /> -->
+      </v-col>
+      <v-col cols="8">
+        <v-sheet
+          min-height="70vh"
+          rounded="lg"
+          class="animate__animated animate__backInUp"
+        >
+          <!-- {{ store.getInfoGroup.info }} -->
+
+          <v-row class="mt-2" justify="space-around">
+            <v-col>
+              <v-row no-gutters>
+                <v-col cols="12" sm="6">
+                  <v-sheet border class="ma-2" rounded="lg">
+                    <v-toolbar class="rounded-t-lg">
+                      <v-toolbar-title>Proposal config</v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text class="text-h6 text-right">
+                      <v-chip
+                        class="ml-2 mb-2"
+                        size="small"
+                        @click="proposalMetadata = addJson1"
+                      >
+                        Example
+                      </v-chip>
+                      <v-text-field
+                        v-model="proposalMetadata"
+                        label="Proposal metadata"
+                        required
+                        variant="outlined"
+                      ></v-text-field>
+                      <v-text-field
+                        v-if="proposalMetadata"
+                        v-model="title"
+                        label="Title proposal"
+                        required
+                        variant="outlined"
+                      ></v-text-field>
+                      <v-text-field
+                        v-if="proposalMetadata"
+                        v-model="summary"
+                        label="Summary proposal"
+                        required
+                        variant="outlined"
+                      ></v-text-field>
+
+                      <!--                     <v-select
+                      v-if="title && summary"
+                      v-model="selectPolicy"
+                      label="Select policy"
+                      :items="finalGroupPolicies"
+                      :item-props="true"
+                      variant="outlined"
+                    ></v-select> -->
+
+                      <!-- <v-text-field
+                          v-model="store.addrWallet"
+                          label="Proposers"
+                          required
+                          variant="outlined"
+                          disabled
+                        ></v-text-field> -->
+                      <!-- <v-select
+                    v-model="selectMsgType"
+                    :items="items"
+                    label="Select"
+                    multiple
+                    chips
+                    outlined
+                    hint="Select type action of sdk"
+                    persistent-hint
+                  ></v-select>    -->
+                    </v-card-text>
+                    <v-card-text class="text-h6">
+                      <v-card-title>Configure your proposal</v-card-title>
+
+                      <v-tabs v-model="tab">
+                        <!--                       <v-tab value="group">Group</v-tab>
+                      <v-tab value="policy">Policy</v-tab> -->
+
+                        <v-tab value="bank">Bank</v-tab>
+                        <v-tab value="staking">Staking</v-tab>
+                        <v-tab value="distribution">Distribution</v-tab>
+                        <v-tab value="feegrants">Fee grants</v-tab>
+                        <v-tab value="five">Authz</v-tab>
+                        <v-tab value="six">CosmWasm</v-tab>
+                        <v-tab value="seven">Token Factory</v-tab>
+                      </v-tabs>
+                      <v-card-text>
+                        <v-window v-model="tab">
+                          <v-window-item value="group">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0].group[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-hover v-slot="{ isHovering, props }">
+                                  <v-card
+                                    :class="{ 'on-hover': isHovering }"
+                                    :elevation="isHovering ? 6 : 2"
+                                    v-bind="props"
+                                    border
+                                    class="mt-3 mr-2 mb-6 pa-2"
+                                    rounded="lg"
+                                  >
+                                    <v-col>
+                                      <h4>
+                                        {{ index }}
+                                        <v-icon color="teal" class="ml-2">
+                                          mdi-check
+                                        </v-icon>
+                                      </h4>
+                                      <!-- {{ selectPolicyData }} -->
+                                    </v-col>
+                                  </v-card>
+                                </v-hover>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+                          <v-window-item value="policy">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0]
+                                  .policy[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-hover v-slot="{ isHovering, props }">
+                                  <v-card
+                                    :class="{ 'on-hover': isHovering }"
+                                    :elevation="isHovering ? 6 : 2"
+                                    v-bind="props"
+                                    border
+                                    class="mt-3 mr-2 mb-6 pa-2"
+                                    rounded="lg"
+                                    @click="
+                                      selectedDialog(
+                                        index,
+                                        selectPolicyData.admin ===
+                                          selectPolicyData.address,
+                                      )
+                                    "
+                                  >
+                                    <v-col>
+                                      <h4>
+                                        {{ index }}
+                                        <v-icon
+                                          v-if="
+                                            selectPolicyData.admin ===
+                                            selectPolicyData.address
+                                          "
+                                          color="teal"
+                                          class="ml-2"
+                                        >
+                                          mdi-check
+                                        </v-icon>
+                                        <v-tooltip
+                                          v-else
+                                          text="Policy is not admin to do this action"
+                                        >
+                                          <template
+                                            v-slot:activator="{ props }"
+                                          >
+                                            <v-icon
+                                              v-bind="props"
+                                              color="red"
+                                              class="ml-2"
+                                            >
+                                              mdi-alert-circle
+                                            </v-icon>
+                                          </template>
+                                        </v-tooltip>
+                                      </h4>
+                                      <!-- {{ selectPolicyData }} -->
+                                    </v-col>
+                                  </v-card>
+                                </v-hover>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+
+                          <v-window-item value="bank">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0].bank[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-hover v-slot="{ isHovering, props }">
+                                  <v-card
+                                    :class="{ 'on-hover': isHovering }"
+                                    :elevation="isHovering ? 6 : 2"
+                                    v-bind="props"
+                                    border
+                                    class="mt-3 mr-2 mb-6 pa-2"
+                                    rounded="lg"
+                                    @click="selectedDialog(index, n)"
+                                  >
+                                    <v-col>
+                                      <h4>
+                                        {{ index }}
+                                        <v-icon
+                                          v-if="n"
+                                          color="teal"
+                                          class="ml-2"
+                                        >
+                                          mdi-check
+                                        </v-icon>
+                                        <v-tooltip v-else text="Coming soon">
+                                          <template
+                                            v-slot:activator="{ props }"
+                                          >
+                                            <v-icon
+                                              v-bind="props"
+                                              color="red"
+                                              class="ml-2"
+                                            >
+                                              mdi-alert-circle
+                                            </v-icon>
+                                          </template>
+                                        </v-tooltip>
+                                      </h4>
+                                    </v-col>
+                                  </v-card>
+                                </v-hover>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+
+                          <v-window-item value="staking">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0]
+                                  .staking[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-hover v-slot="{ isHovering, props }">
+                                  <v-card
+                                    :class="{ 'on-hover': isHovering }"
+                                    :elevation="isHovering ? 6 : 2"
+                                    v-bind="props"
+                                    border
+                                    class="mt-3 mr-2 mb-6 pa-2"
+                                    rounded="lg"
+                                    @click="selectedDialog(index, n)"
+                                  >
+                                    <v-col>
+                                      <h4>
+                                        {{ index }}
+                                        <v-icon
+                                          v-if="n"
+                                          color="teal"
+                                          class="ml-2"
+                                        >
+                                          mdi-check
+                                        </v-icon>
+                                        <v-tooltip v-else text="Coming soon">
+                                          <template
+                                            v-slot:activator="{ props }"
+                                          >
+                                            <v-icon
+                                              v-bind="props"
+                                              color="red"
+                                              class="ml-2"
+                                            >
+                                              mdi-alert-circle
+                                            </v-icon>
+                                          </template>
+                                        </v-tooltip>
+                                      </h4>
+                                    </v-col>
+                                  </v-card>
+                                </v-hover>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+
+                          <v-window-item value="distribution">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0]
+                                  .distribution[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-hover v-slot="{ isHovering, props }">
+                                  <v-card
+                                    border
+                                    class="mt-3 mr-2 pa-2"
+                                    rounded="lg"
+                                    @click="selectedDialog(index, n)"
+                                  >
+                                    <v-col>
+                                      <h4>
+                                        {{ index }}
+                                        <v-icon
+                                          v-if="n"
+                                          color="teal"
+                                          class="ml-2"
+                                        >
+                                          mdi-check
+                                        </v-icon>
+                                        <v-tooltip v-else text="Coming soon">
+                                          <template
+                                            v-slot:activator="{ props }"
+                                          >
+                                            <v-icon
+                                              v-bind="props"
+                                              color="red"
+                                              class="ml-2"
+                                            >
+                                              mdi-alert-circle
+                                            </v-icon>
+                                          </template>
+                                        </v-tooltip>
+                                      </h4>
+                                    </v-col>
+                                  </v-card>
+                                </v-hover>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+                          <v-window-item value="feegrants">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0]
+                                  .feegrants[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-hover v-slot="{ isHovering, props }">
+                                  <v-card
+                                    border
+                                    class="mt-3 mr-2 pa-2"
+                                    rounded="lg"
+                                    @click="selectedDialog(index, n)"
+                                  >
+                                    <v-col>
+                                      <h4>
+                                        {{ index }}
+                                        <v-icon
+                                          v-if="n"
+                                          color="teal"
+                                          class="ml-2"
+                                        >
+                                          mdi-check
+                                        </v-icon>
+                                        <v-tooltip v-else text="Coming soon">
+                                          <template
+                                            v-slot:activator="{ props }"
+                                          >
+                                            <v-icon
+                                              v-bind="props"
+                                              color="red"
+                                              class="ml-2"
+                                            >
+                                              mdi-alert-circle
+                                            </v-icon>
+                                          </template>
+                                        </v-tooltip>
+                                      </h4>
+                                    </v-col>
+                                  </v-card>
+                                </v-hover>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+                          <v-window-item value="five">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0].authz[0]"
+                                :key="n"
+                                cols="12"
+                                sm="6"
+                              >
+                                <v-sheet
+                                  border
+                                  class="mt-3 mr-2 pa-2"
+                                  rounded="lg"
+                                  @click="selectedDialog(index, n)"
+                                >
+                                  <v-col>
+                                    <h4>
+                                      {{ index }}
+                                      <v-icon
+                                        v-if="n"
+                                        color="teal"
+                                        class="ml-2"
+                                      >
+                                        mdi-check
+                                      </v-icon>
+                                      <v-tooltip v-else text="Coming soon">
+                                        <template v-slot:activator="{ props }">
+                                          <v-icon
+                                            v-bind="props"
+                                            color="red"
+                                            class="ml-2"
+                                          >
+                                            mdi-alert-circle
+                                          </v-icon>
+                                        </template>
+                                      </v-tooltip>
+                                    </h4>
+                                  </v-col>
+                                </v-sheet>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+
+                          <v-window-item value="six">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0]
+                                  .cosmwasm[0]"
+                                :key="n"
+                                cols="12"
+                                sm="4"
+                              >
+                                <v-sheet
+                                  border
+                                  class="mt-3 mr-2 pa-2"
+                                  rounded="lg"
+                                >
+                                  <v-col>
+                                    <h4>
+                                      {{ index }}
+                                      <v-icon
+                                        v-if="n"
+                                        color="teal"
+                                        class="ml-2"
+                                      >
+                                        mdi-check
+                                      </v-icon>
+                                      <v-tooltip v-else text="Coming soon">
+                                        <template v-slot:activator="{ props }">
+                                          <v-icon
+                                            v-bind="props"
+                                            color="red"
+                                            class="ml-2"
+                                          >
+                                            mdi-alert-circle
+                                          </v-icon>
+                                        </template>
+                                      </v-tooltip>
+                                    </h4>
+                                  </v-col>
+                                </v-sheet>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+
+                          <v-window-item value="seven">
+                            <v-row no-gutters>
+                              <v-col
+                                v-for="(n, index) in allSdkMessages[0]
+                                  .tokenfactory[0]"
+                                :key="n"
+                                cols="12"
+                                sm="4"
+                              >
+                                <v-sheet
+                                  border
+                                  class="mt-3 mr-2 pa-2"
+                                  rounded="lg"
+                                  @click="selectedDialog(index, n)"
+                                >
+                                  <v-col>
+                                    <h4>
+                                      {{ index }}
+                                      <v-icon
+                                        v-if="n"
+                                        color="teal"
+                                        class="ml-2"
+                                      >
+                                        mdi-check
+                                      </v-icon>
+                                      <v-tooltip v-else text="Coming soon">
+                                        <template v-slot:activator="{ props }">
+                                          <v-icon
+                                            v-bind="props"
+                                            color="red"
+                                            class="ml-2"
+                                          >
+                                            mdi-alert-circle
+                                          </v-icon>
+                                        </template>
+                                      </v-tooltip>
+                                    </h4>
+                                  </v-col>
+                                </v-sheet>
+                              </v-col>
+                            </v-row>
+                          </v-window-item>
+                        </v-window>
+                      </v-card-text>
+                      <v-card-text> </v-card-text>
+                    </v-card-text>
+                  </v-sheet>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-sheet border class="ma-2" rounded="lg">
+                    <v-toolbar class="rounded-t-lg">
+                      <v-toolbar-title>Final proposal</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                      <v-btn elevation="2" @click="clearFinalMsgs()"
+                        >Clear</v-btn
+                      >
+                    </v-toolbar>
+
+                    <v-card-text class="text-h6 text-right"> </v-card-text>
+                    <v-expansion-panels class="pa-2">
+                      <!-- TODO improve output clear effect -->
+                      <v-expansion-panel
+                        v-for="(item, i) in finalMessages"
+                        :key="i"
+                        class="animate__animated animate__backInUp"
+                      >
+                        <v-expansion-panel-title>
+                          {{ item }}
+                        </v-expansion-panel-title>
+                        <v-expansion-panel-text v-if="item === 'Send'">
+                          <messagesTypeSendTx
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Delegate'">
+                          <messagesTypeDelegateTx
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Authz Grant'">
+                          <messagesTypeauthZGrant
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Authz Revoke'">
+                          <messagesTypeauthZRevoke
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Add Member'">
+                          <messagesTypeaddMember
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Update Members'"
+                        >
+                          <messagesTypeupdateMembers
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Update Policy Admin'"
+                        >
+                          <messagesTypeupdatePolicyAdmin
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Update Metadata'"
+                        >
+                          <messagesTypeupdateMetadata
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Create Policy'">
+                          <messagesTypecreatePolicy
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Update Group Admin'"
+                        >
+                          <messagesTypeupdateGroupAdmin
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Update Policy Decision'"
+                        >
+                          <messagesTypeupdatePolicyDecision
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Withdraw Reward'"
+                        >
+                          <messagesTypewithdrawReward
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+
+                        <v-expansion-panel-text v-if="item === 'Undelegate'">
+                          <messagesTypeundelegateTx
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Redelegate'">
+                          <messagesTyperedelegateTx
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text
+                          v-if="item === 'Fund Community Pool'"
+                        >
+                          <messagesTypefundComPool
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                        <v-expansion-panel-text v-if="item === 'Mint'">
+                          <messagesTypetokenFactorymint
+                            :from="selectPolicyData.address"
+                          />
+                        </v-expansion-panel-text>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </v-sheet>
+                  <v-sheet
+                    v-if="store.finalGroupPropMsg.length > 0"
+                    border
+                    class="ma-2 pa-2"
+                    rounded="lg"
+                  >
+                    <v-table>
+                      <thead>
+                        <tr>
+                          <th class="text-left">Name</th>
+                          <th class="text-left">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(item, index) in store.finalGroupPropMsg"
+                          :key="item.name"
+                        >
+                          <td>{{ item.titleMsg }}</td>
+                          <td>
+                            <v-btn
+                              elevation="2"
+                              icon="mdi-eye-arrow-right-outline"
+                              @click="openDialogDetail(index)"
+                            >
+                            </v-btn>
+                            <v-btn
+                              elevation="2"
+                              icon="mdi-delete-forever"
+                              @click="deleteMsgGroup(index)"
+                            >
+                            </v-btn>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </v-table>
+                  </v-sheet>
+                  <v-col cols="12" sm="12">
+                    <v-btn
+                      block
+                      elevation="2"
+                      class="mr-4"
+                      :disabled="!title || !summary || !selectPolicy"
+                      @click="openCreatePolicy()"
+                    >
+                      Create proposal
+                    </v-btn>
+                  </v-col>
+                </v-col>
+              </v-row>
+
+              <br /><br /><br /><br />
+            </v-col>
+          </v-row>
+
+          <v-dialog v-model="dialog" width="500">
+            <v-card>
+              <v-card-text>
+                <div v-if="selectedDialogMsg === 'SendTx'">
+                  <messagesTypeSendTx :from="this.selectPolicyData.address" />
+                </div>
+                <div v-if="selectedDialogMsg === 'Delegate'">
+                  <messagesTypeDelegateTx
+                    :from="this.selectPolicyData.address"
+                  />
+                </div>
+                <div v-if="selectedDialogMsg === 'CosmWasm'">
+                  <messagesTypeCosmwasmTx
+                    :from="this.selectPolicyData.address"
+                  />
+                </div>
+                <div v-if="selectedDialogMsg === 'PropText'">
+                  <messagesTypePropText :from="this.selectPolicyData.address" />
+                </div>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" block @click="dialog = false"
+                  >Close Dialog</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDetail" width="800">
+            <v-card>
+              <v-card-text>
+                <!-- test {{ store.finalGroupPropMsg[dialogDetailData] }} -->
+                <v-table>
+                  <tbody>
+                    <tr
+                      v-for="item in store.finalGroupPropMsg[dialogDetailData]
+                        .finalData"
+                      :key="item.name"
+                    >
+                      <td>{{ item.name }}</td>
+                      <td v-if="item.name === 'Amount'">
+                        <v-chip color="teal" label>
+                          {{ item.data.amount }} {{ item.data.denom }}
+                        </v-chip>
+                      </td>
+                      <td v-else-if="item.name === 'Authorization'">
+                        <v-chip color="teal" label>
+                          {{ item.data }}
+                        </v-chip>
+                      </td>
+                      <td v-else-if="item.name === 'User data'">
+                        <v-table density="compact">
+                          <tbody>
+                            <tr
+                              v-for="(item2, i) in item.data"
+                              :key="item2.name"
+                            >
+                              <td>{{ i }}</td>
+                              <td v-if="i === 'metadata'">
+                                <v-btn
+                                  density="default"
+                                  icon="mdi-open-in-new"
+                                  :href="item2"
+                                  target="_blank"
+                                ></v-btn>
+                              </td>
+                              <td v-else>{{ item2 }}</td>
+                            </tr>
+                          </tbody>
+                        </v-table>
+                      </td>
+                      <td v-else>{{ item.data }}</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" block @click="dialogDetail = false"
+                  >Close Dialog</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <v-dialog v-model="createPropModal" width="900">
+    <v-card elevation="16" title="Check final proposal">
+      <template v-slot:append>
+        <v-btn
+          icon="$close"
+          variant="text"
+          @click="createPropModal = false"
+        ></v-btn>
+      </template>
+
+      <v-divider></v-divider>
+
+      <div class="py-12">
+        <v-table>
+          <tbody>
+            <tr>
+              <td>Title</td>
+              <td>{{ title }}</td>
+            </tr>
+            <tr>
+              <td>Summary</td>
+              <td>{{ summary }}</td>
+            </tr>
+
+            <tr>
+              <td>Group Policy Address</td>
+              <td>{{ selectPolicyData.address }}</td>
+            </tr>
+            <tr>
+              <td>Proposers</td>
+              <td>{{ this.store.addrWallet }}</td>
+            </tr>
+
+            <tr v-if="finalMessages.length > 0">
+              <td>Messages</td>
+              <td>{{ finalMessages }}</td>
+            </tr>
+            <tr v-if="longDescription !== ''">
+              <td>Detail</td>
+              <td>{{ longDescription }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+      </div>
+
+      <v-divider></v-divider>
+
+      <div class="pa-4 text-end">
+        <v-btn
+          class="text-none"
+          color="medium-emphasis"
+          min-width="92"
+          variant="outlined"
+          rounded
+          :color="cosmosConfig[store.chainSelected].color"
+          @click="createProposal"
+        >
+          Create Proposal
+        </v-btn>
+      </div>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="dialogSuccess" width="auto">
+    <v-sheet
+      class="pa-4 text-center mx-auto"
+      elevation="12"
+      min-width="600"
+      rounded="lg"
+      width="100%"
+    >
+      <v-icon
+        class="mb-5"
+        color="success"
+        icon="mdi-check-circle"
+        size="112"
+      ></v-icon>
+
+      <h2 class="text-h5 mb-6">Your proposal is submitted</h2>
+
+      <v-divider class="mb-4"></v-divider>
+
+      <div class="text-end">
+        <v-btn
+          class="text-none"
+          color="success"
+          variant="flat"
+          width="90"
+          rounded
+          @click="dialogSuccess = false"
+        >
+          Done
+        </v-btn>
+      </div>
+    </v-sheet>
+  </v-dialog>
+</template>
+<script>
+import { useRoute } from "vue-router";
+import { useAppStore } from "@/stores/data";
+import cosmosConfig from "@/cosmos.config";
+import {
+  defaultRegistryTypes,
+  assertIsDeliverTxSuccess,
+  SigningStargateClient,
+  GasPrice,
+  calculateFee,
+} from "@cosmjs/stargate";
+import { selectSigner, calculFee } from "@/libs/signer";
+import axios from "axios";
+
+// import GroupDetailMenu from "@/components/GroupDetailMenu.vue";
+
+import messagesTypeSendTx from "@/components/messagesType/sendTx.vue";
+import messagesTypeDelegateTx from "@/components/messagesType/delegateTx.vue";
+import messagesTypeCosmwasmTx from "@/components/messagesType/cosmwasmTx.vue";
+import messagesTypePropText from "@/components/messagesType/propText.vue";
+import messagesTypeauthZGrant from "@/components/messagesType/authZGrant.vue";
+import messagesTypeauthZRevoke from "@/components/messagesType/authZRevoke.vue";
+import messagesTypewithdrawReward from "@/components/messagesType/withdrawReward.vue";
+import messagesTyperedelegateTx from "@/components/messagesType/redelegateTx.vue";
+import messagesTypeundelegateTx from "@/components/messagesType/undelegateTx.vue";
+import messagesTypetokenFactorymint from "@/components/messagesType/tokenfactory/mint.vue";
+
+import messagesTypeupdateMembers from "@/components/messagesType/group/updateMembers.vue";
+import messagesTypeaddMember from "@/components/messagesType/group/addMember.vue";
+import messagesTypeupdateMetadata from "@/components/messagesType/group/updateMetadata.vue";
+import messagesTypecreatePolicy from "@/components/messagesType/group/createPolicy.vue";
+import messagesTypeupdateGroupAdmin from "@/components/messagesType/group/updateGroupAdmin.vue";
+
+import messagesTypeupdatePolicyAdmin from "@/components/messagesType/policy/updatePolicyAdmin.vue";
+import messagesTypeupdatePolicyDecision from "@/components/messagesType/policy/updatePolicyDecision.vue";
+
+import messagesTypefundComPool from "@/components/messagesType/distribution/fundComPool.vue";
+
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
+
+export default {
+  components: {
+    // GroupDetailMenu,
+    messagesTypeSendTx,
+    messagesTypeDelegateTx,
+    messagesTypeCosmwasmTx,
+    messagesTypePropText,
+    messagesTypeauthZGrant,
+    messagesTypeauthZRevoke,
+    messagesTypeaddMember,
+    messagesTypewithdrawReward,
+    messagesTypeupdateMembers,
+    messagesTypeupdatePolicyAdmin,
+    messagesTypeupdateMetadata,
+    messagesTypeupdateGroupAdmin,
+    messagesTypecreatePolicy,
+    messagesTypeupdatePolicyDecision,
+    messagesTyperedelegateTx,
+    messagesTypeundelegateTx,
+    messagesTypefundComPool,
+    messagesTypetokenFactorymint,
+    MarkdownRenderer,
+  },
+  data: () => ({
+    cosmosConfig: cosmosConfig,
+    tab: "group",
+    createPropModal: false,
+    dialogSuccess: false,
+    proposalType: "",
+    proposalDescription: "### My proposal  \n\n --- \n Your proposal desciprion",
+    proposalTitle: "My proposal title",
+    proposalSummary: "My proposal summary",
+    proposalMetadata: "",
+
+    allSdkMessages: [
+      {
+        bank: [
+          {
+            Send: true,
+            //"Multi send": false,
+          },
+        ],
+        staking: [
+          {
+            Delegate: true,
+            Undelegate: true,
+            Redelegate: true,
+            "Cancel Unbonding": false,
+          },
+        ],
+        distribution: [
+          {
+            "Withdraw Reward": true,
+            "Fund Community Pool": true,
+            "Set Withdraw Address": false,
+          },
+        ],
+        group: [
+          {
+            "Add Member": true,
+            "Update Members": true,
+            "Update Metadata": false,
+            "Create Policy": false,
+            "Update Group Admin": false,
+          },
+        ],
+        gov: [
+          {
+            "Text Proposal": true,
+          },
+        ],
+        policy: [
+          {
+            "Update Policy Decision": false,
+            "Update Policy Metadata": false,
+            "Update Policy Admin": false,
+          },
+        ],
+        feegrants: [
+          {
+            "Grant Allowance": false,
+            "Revoke Allowance": false,
+          },
+        ],
+        authz: [
+          {
+            "Authz Grant": true,
+            "Authz Revoke": true,
+            Exec: false,
+          },
+        ],
+        cosmwasm: [
+          {
+            Execute: false,
+            Migrate: false,
+            "Update Admin": false,
+            "Clear Admin": false,
+            Instantiate: false,
+            Instantiate2: false,
+            "Store Code": false,
+          },
+        ],
+        tokenfactory: [
+          {
+            Mint: true,
+          },
+        ],
+      },
+    ],
+    title: "",
+    finalGroupPolicies: [],
+    finalMessages: [],
+    dialog: false,
+    selectedDialogMsg: "",
+    dialogDetail: false,
+    dialogDetailData: "",
+    infoGroupId: "",
+    selectPolicy: "",
+    selectPolicyData: "",
+    isLoaded: false,
+    summary: "",
+    longDescription: "",
+    proposalMetadata: "",
+    addJson1:
+      "https://gist.githubusercontent.com/atmoner/0330ec6e0377826a4c43f6a6901f0231/raw/6b4c9ec51d8dbd5b9cbbb2e280186ac937d83bd7/proposal.json",
+  }),
+  setup() {
+    const store = useAppStore();
+    const route = useRoute();
+    return { store, route };
+  },
+  watch: {
+    /*     selectPolicy: function (val) {
+      console.log("selectPolicy", val);
+      this.selectPolicyData = this.store.getInfoGroup.info.policy.find(
+        (item) => item.metadata.name === val,
+      );
+    }, */
+    proposalMetadata: async function (val) {
+      console.log("proposalMetadata", val);
+      axios.get(val).then((response) => {
+        console.log(response.data);
+        this.title = response.data.title;
+        this.summary = response.data.summary;
+        this.longDescription = response.data.details;
+      });
+    },
+  },
+  async mounted() {
+    await this.store.initRpc();
+    console.log(this.$route.params.id);
+    // await this.store.getDetailGroup(this.$route.params.id);
+    // this.store.getDetailGroup(this.$route.params.id);
+
+    /*     this.finalGroupPolicies = this.store.getInfoGroup.info.policy.map(
+      (item) => {
+        return {
+          title: item.metadata.name,
+          subtitle: item.address,
+        };
+      },
+    );
+    this.store.finalGroupPropMsgType = [];
+    this.store.finalGroupPropMsg = [];
+    this.isLoaded = true; */
+  },
+  methods: {
+    async createNewProposal() {},
+    openCreatePolicy() {
+      this.createPropModal = true;
+    },
+    async createProposal() {
+      let signer = await selectSigner(this.store.chainSelected, "keplr");
+      const foundMsgType = defaultRegistryTypes.find(
+        (element) => element[0] === "/cosmos.group.v1.MsgSubmitProposal",
+      );
+
+      const finalMsg = {
+        typeUrl: foundMsgType[0],
+        value: foundMsgType[1].fromPartial({
+          groupPolicyAddress: this.selectPolicyData.address,
+          proposers: [this.store.addrWallet],
+          metadata: this.proposalMetadata,
+          messages: this.store.finalGroupPropMsgType,
+          exec: 0,
+          title: this.title,
+          summary: this.summary,
+        }),
+      };
+
+      try {
+        const result = await signer.client.signAndBroadcast(
+          this.store.addrWallet,
+          [finalMsg],
+          "auto",
+          "",
+        );
+        console.log(result);
+        this.createPropModal = false;
+        this.dialogSuccess = true;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    openDialogDetail(item) {
+      this.dialogDetail = true;
+      this.dialogDetailData = item;
+    },
+    clearMsgs() {
+      this.selectMsgType = [];
+    },
+    clearFinalMsgs() {
+      //this.store.finalGroupPropMsg = [];
+      this.store.finalGroupPropMsgType = [];
+      this.finalMessages = [];
+    },
+    addMessage(type) {
+      this.selectMsgType.push(type);
+    },
+    selectedDialog(item, n) {
+      if (n) this.finalMessages.push(item);
+      //this.selectedDialogMsg = item
+      //this.dialog = true
+    },
+    deleteMsgGroup(index) {
+      this.store.finalGroupPropMsgType.splice(index, 1);
+      this.store.finalGroupPropMsg.splice(index, 1);
+    },
+  },
+};
+</script>
