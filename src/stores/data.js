@@ -559,7 +559,6 @@ export const useAppStore = defineStore("app", {
       }
 
       this.lastTransactions = push_array;
-
     },
     async getChainStats() {
       const inflation = await axios(
@@ -754,7 +753,6 @@ export const useAppStore = defineStore("app", {
 
       this.btcAddress = btcAddress;
       this.btcAmount = btcAmount;
-
     },
   },
 });

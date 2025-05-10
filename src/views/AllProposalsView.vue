@@ -3,7 +3,7 @@
     <v-sheet border class="ma-2 pa-2" rounded="lg">
       <v-row no-gutters>
         <v-col cols="12" sm="6">
-          <v-sheet class="text-h6 pa-2">Last 10 transactions</v-sheet>
+          <v-sheet class="text-h6 pa-2">All proposals</v-sheet>
         </v-col>
       </v-row>
       <v-table>

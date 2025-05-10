@@ -5,14 +5,9 @@
     <v-row v-if="appStore.isLogged === true">
       <v-col cols="4">
         <v-card class="mx-auto my-4 rounded-lg" elevation="16" height="330">
-          <v-card-item>
-            <v-card-title> Wallet info </v-card-title>
-            <template v-slot:append>
-              <v-chip label>
-                {{ appStore.nameWallet.name }}
-              </v-chip></template
-            >
-          </v-card-item>
+          <v-toolbar class="rounded-t-lg">
+            <v-toolbar-title>Wallet info</v-toolbar-title>
+          </v-toolbar>
 
           <v-list lines="two">
             <v-list-item title="Cosmos address" @click="tab = 1">
@@ -81,18 +76,93 @@
               </v-card-text> -->
         </v-card>
       </v-col>
+
       <v-col cols="4">
         <v-card
           class="mx-auto my-4 rounded-lg"
           elevation="16"
           height="330"
           rounded
+          :disabled="tab !== 1"
         >
-          <v-tabs v-model="tab" align-tabs="center" fixed-tabs>
-            <v-tab :value="1"><v-icon>mdi-atom</v-icon> Cosmos</v-tab>
-            <v-tab :value="2"><v-icon>mdi-bitcoin</v-icon> Bitcoin</v-tab>
-            <v-tab :value="3"><v-icon>mdi-ethereum</v-icon> Etherum</v-tab>
-          </v-tabs>
+          <v-toolbar class="rounded-t-lg">
+            <v-toolbar-title>Wallet actions</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text v-if="appStore.isLogged === true">
+            <v-list lines="two">
+              <v-list-item
+                subtitle="Send any tokens"
+                title="Send token"
+                @click="dialogSend = true"
+              >
+                <template v-slot:prepend>
+                  <v-avatar color="blue">
+                    <v-icon color="white">mdi-clipboard-text</v-icon>
+                  </v-avatar>
+                </template>
+
+                <template v-slot:append>
+                  <v-btn
+                    color="grey-lighten-1"
+                    icon="mdi-information"
+                    variant="text"
+                  ></v-btn>
+                </template>
+              </v-list-item>
+
+              <v-list-item
+                subtitle="Delegate your token"
+                title="Delegate"
+                @click="dialogDelegate = true"
+              >
+                <template v-slot:prepend>
+                  <v-avatar color="amber">
+                    <v-icon color="white">mdi-gesture-tap-button</v-icon>
+                  </v-avatar>
+                </template>
+
+                <template v-slot:append>
+                  <v-btn
+                    color="grey-lighten-1"
+                    icon="mdi-information"
+                    variant="text"
+                  ></v-btn>
+                </template>
+              </v-list-item>
+              <v-list-item subtitle="Token rewards" title="Token rewards">
+                <template v-slot:prepend>
+                  <v-avatar color="green">
+                    <v-icon color="white">mdi-information</v-icon>
+                  </v-avatar>
+                </template>
+
+                <template v-slot:append>
+                  <v-btn
+                    color="grey-lighten-1"
+                    icon="mdi-information"
+                    variant="text"
+                  ></v-btn>
+                </template>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <v-card
+          class="mx-auto my-4 rounded-lg"
+          elevation="16"
+          height="auto"
+          min-height="330"
+          rounded
+        >
+          <v-toolbar class="rounded-t-lg">
+            <v-tabs v-model="tab" align-tabs="center" fixed-tabs>
+              <v-tab :value="1"><v-icon>mdi-atom</v-icon> Cosmos</v-tab>
+              <v-tab :value="2"><v-icon>mdi-bitcoin</v-icon> Bitcoin</v-tab>
+              <v-tab :value="3"><v-icon>mdi-ethereum</v-icon> Etherum</v-tab>
+            </v-tabs>
+          </v-toolbar>
 
           <v-tabs-window v-model="tab">
             <v-tabs-window-item v-for="n in 3" :key="n" :value="n">
@@ -169,7 +239,6 @@
                               ).toFixed(8)
                             }}
                           </td>
- 
                         </tr>
                       </tbody>
                     </v-table>
@@ -191,92 +260,14 @@
           </v-tabs-window>
         </v-card>
       </v-col>
-      <v-col cols="4">
-        <v-card
-          class="mx-auto my-4 rounded-lg"
-          elevation="16"
-          height="330"
-          rounded
-        >
-          <v-card-item>
-            <v-card-title> Wallet actions </v-card-title>
- 
-          </v-card-item>
-
-          <v-card-text v-if="appStore.isLogged === true">
-            <v-list lines="two">
-              <v-list-item
-                subtitle="Send any tokens"
-                title="Send token"
-                @click="dialogSend = true"
-              >
-                <template v-slot:prepend>
-                  <v-avatar color="blue">
-                    <v-icon color="white">mdi-clipboard-text</v-icon>
-                  </v-avatar>
-                </template>
-
-                <template v-slot:append>
-                  <v-btn
-                    color="grey-lighten-1"
-                    icon="mdi-information"
-                    variant="text"
-                  ></v-btn>
-                </template>
-              </v-list-item>
-
-              <v-list-item
-                subtitle="Delegate your token"
-                title="Delegate"
-                @click="dialogDelegate = true"
-              >
-                <template v-slot:prepend>
-                  <v-avatar color="amber">
-                    <v-icon color="white">mdi-gesture-tap-button</v-icon>
-                  </v-avatar>
-                </template>
-
-                <template v-slot:append>
-                  <v-btn
-                    color="grey-lighten-1"
-                    icon="mdi-information"
-                    variant="text"
-                  ></v-btn>
-                </template>
-              </v-list-item>
-              <v-list-item subtitle="Token rewards" title="Token rewards">
-                <template v-slot:prepend>
-                  <v-avatar color="green">
-                    <v-icon color="white">mdi-information</v-icon>
-                  </v-avatar>
-                </template>
-
-                <template v-slot:append>
-                  <v-btn
-                    color="grey-lighten-1"
-                    icon="mdi-information"
-                    variant="text"
-                  ></v-btn>
-                </template>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
     </v-row>
   </v-container>
   <v-container fluid>
-    <v-sheet
-      v-if="appStore.isLogged === true"
-      border
-      class="ma-2 pa-2"
-      rounded="lg"
-    >
-      <v-row no-gutters>
-        <v-col cols="12" sm="6">
-          <v-sheet class="text-h6 pa-2">Last 10 transactions</v-sheet>
-        </v-col>
-      </v-row>
+    <v-sheet v-if="appStore.isLogged === true" border rounded="lg">
+      <v-toolbar class="rounded-t-lg">
+        <v-toolbar-title>Last 10 transactions</v-toolbar-title>
+      </v-toolbar>
+
       <v-table>
         <thead>
           <tr>
@@ -344,6 +335,7 @@
       prepend-icon="mdi-update"
       text="Send any token of your chain."
       title="Send token"
+      class="rounded-lg"
     >
       <v-form v-model="valid">
         <v-container>
@@ -383,6 +375,7 @@
   </v-dialog>
   <v-dialog v-model="dialogDelegate" width="650">
     <v-card
+      class="rounded-lg"
       prepend-icon="mdi-update"
       text="Delegate your token to a validator."
       title="Delegate token"
@@ -462,7 +455,7 @@
       </v-form>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="appStore.chainOffline" width="650" persistent>
+  <v-dialog v-model="appStore.chainOffline" width="650" persistent scrim>
     <v-card>
       <v-empty-state icon="mdi-alert-circle-outline" color="error">
         <template v-slot:headline>
@@ -563,9 +556,7 @@ export default defineComponent({
       appStore,
     };
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     selectDelValidator(item) {
       this.delegationStep1 = false;
@@ -580,8 +571,6 @@ export default defineComponent({
     async sendToken() {
       const appStore = useAppStore();
 
-
-      
       const signer = await selectSigner(0);
       const finalMsg = {
         typeUrl: "/cosmos.bank.v1beta1.MsgSend",
@@ -694,16 +683,7 @@ export default defineComponent({
           this.delegationStep2 = true;
         }
       }
-    },
-    async loginWallet() {
-      const appStore = useAppStore();
-      await appStore.keplrConnect();
-      await appStore.initRpc();
-      await appStore.getAccountInfo();
-      await appStore.getBankModule();
-      await appStore.getTransactions();
-      await appStore.getAllValidators();
-    },
+    }, 
     formatDate(date) {
       const options = {
         year: "numeric",
