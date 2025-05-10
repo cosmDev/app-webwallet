@@ -4,7 +4,7 @@
   <v-container fluid>
     <v-row v-if="appStore.isLogged === true">
       <v-col cols="4">
-        <v-card class="mx-auto my-4 rounded-lg" elevation="16" height="330">
+        <v-card border class="mx-auto my-4 rounded-lg" elevation="16" height="330">
           <v-toolbar class="rounded-t-lg">
             <v-toolbar-title>Wallet info</v-toolbar-title>
           </v-toolbar>
@@ -79,6 +79,7 @@
 
       <v-col cols="4">
         <v-card
+          border
           class="mx-auto my-4 rounded-lg"
           elevation="16"
           height="330"
@@ -150,6 +151,7 @@
       </v-col>
       <v-col cols="4">
         <v-card
+          border
           class="mx-auto my-4 rounded-lg"
           elevation="16"
           height="auto"
@@ -263,7 +265,7 @@
     </v-row>
   </v-container>
   <v-container fluid>
-    <v-sheet v-if="appStore.isLogged === true" border rounded="lg">
+    <v-sheet v-if="appStore.isLogged === true" border rounded="lg" elevation="16">
       <v-toolbar class="rounded-t-lg">
         <v-toolbar-title>Last 10 transactions</v-toolbar-title>
       </v-toolbar>
@@ -289,7 +291,18 @@
                 >{{ item.titleMsg }}
               </v-chip>
             </td>
-            <td>{{ formatDate(item.timestamp) }}</td>
+            <td> 
+
+              {{ moment(item.timestamp).format('llll') }}
+              
+              <v-chip
+                class="ma-2"
+                label
+              >
+                {{ moment(item.timestamp).fromNow() }}
+              </v-chip>
+              
+            </td>
             <td v-if="item.finalData.amount?.data.amount">
               {{ item.finalData.amount?.data.amount / 1000000 }}
               <strong
@@ -316,9 +329,8 @@
                 class="ma-2"
                 label
                 :to="
-                  '/transactions/' +
-                  cosmosConfig[appStore.setChainSelected].slot +
-                  '/' +
+                  '/tx-details/' +
+  
                   item.txhash
                 "
               >
@@ -482,6 +494,7 @@ import { ref, defineComponent } from "vue";
 import { useAppStore } from "@/stores/data";
 import cosmosConfig from "@/cosmos.config";
 import { selectSigner } from "@/libs/signer.js";
+import moment from "moment";
 
 import {
   defaultRegistryTypes,
@@ -501,6 +514,7 @@ export default defineComponent({
       cosmosConfig,
       theme: ref("light"),
       publicPath: process.env.BASE_URL,
+      moment,
       dialogSend: false,
       dialogDelegate: false,
       allDenomsTokens: [],
