@@ -340,16 +340,12 @@
 import axios from "axios";
 import moment from "moment";
 
-import JsonViewer from "vue-json-viewer";
 import cosmosConfig from "@/cosmos.config";
 import { useAppStore } from "@/stores/data";
 import { setMsg } from "@/libs/msgTypeTxDetail";
 
 export default {
   name: "DetailTx",
-  components: {
-    JsonViewer,
-  },
   data: () => ({
     cosmosConfig: cosmosConfig,
     moment,
