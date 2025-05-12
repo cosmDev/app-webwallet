@@ -1,7 +1,8 @@
 // Utilities
 import { defineStore } from "pinia";
 import axios from "axios";
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
+ 
+import { createProtobufRpcClient, QueryClient, defaultRegistryTypes } from "@cosmjs/stargate";
 import { Tendermint37Client } from "@cosmjs/tendermint-rpc";
 import Long from "long";
 import bech32 from "bech32";
@@ -18,6 +19,7 @@ import * as distrib from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import * as gov from "cosmjs-types/cosmos/gov/v1beta1/query";
 import * as authz from "cosmjs-types/cosmos/authz/v1beta1/query";
 import * as feegrant from "cosmjs-types/cosmos/feegrant/v1beta1/query";
+import * as feegrantType from "cosmjs-types/cosmos/feegrant/v1beta1/feegrant";
 import {
   GenericAuthorization,
   GrantAuthorization,
@@ -50,7 +52,6 @@ export const useAppStore = defineStore("app", {
     allAuthz: [],
     myFeeAllowances: [],
     formFeeGranter: "",
-    myFeeGrants: [],
     myFeeGrants: [],
     setFeePayer: "",
     isValidator: false,
@@ -333,10 +334,48 @@ export const useAppStore = defineStore("app", {
         await queryFeegrant.AllowancesByGranter({ granter: this.addrWallet });
       this.myFeeAllowances = queryFeegrantResult.allowances;
       this.myFeeGrants = queryAllowancesByGranterResult.allowances;
+ 
+      for (let i = 0; i < this.myFeeGrants.length; i++) {
+ 
+        console.log(
+          "this.myFeeGrants",
+          this.myFeeGrants[i].allowance
+        );
+        console.log("feegrantData", feegrantType);
+
+        if (this.myFeeGrants[i].allowance.typeUrl === "/cosmos.feegrant.v1beta1.BasicAllowance") {
+          this.myFeeGrants[i].allowance.value = feegrantType.BasicAllowance.decode(
+            this.myFeeGrants[i].allowance.value,
+          );
+        }
+        if (this.myFeeGrants[i].allowance.typeUrl === "/cosmos.feegrant.v1beta1.PeriodicAllowance") {
+          this.myFeeGrants[i].allowance.value = feegrantType.PeriodicAllowance.decode(
+            this.myFeeGrants[i].allowance.value,
+          );
+        } 
+      }
+
+
 
       let finalGranter = [];
       for (let i = 0; i < this.myFeeAllowances.length; i++) {
         finalGranter[i] = this.myFeeAllowances[i].granter;
+        console.log(
+          "myFeeAllowances",
+          this.myFeeAllowances[i].allowance
+        );
+        console.log("feegrantData", feegrantType);
+
+        if (this.myFeeAllowances[i].allowance.typeUrl === "/cosmos.feegrant.v1beta1.BasicAllowance") {
+          this.myFeeAllowances[i].allowance.value = feegrantType.BasicAllowance.decode(
+            this.myFeeAllowances[i].allowance.value,
+          );
+        }
+        if (this.myFeeAllowances[i].allowance.typeUrl === "/cosmos.feegrant.v1beta1.PeriodicAllowance") {
+          this.myFeeAllowances[i].allowance.value = feegrantType.PeriodicAllowance.decode(
+            this.myFeeAllowances[i].allowance.value,
+          );
+        } 
       }
       this.formFeeGranter = finalGranter;
     },

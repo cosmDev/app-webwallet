@@ -39,9 +39,15 @@
 
       <v-btn disabled class="me-2" height="40" variant="outlined">Authz</v-btn>
 
-      <v-btn disabled class="me-2" height="40" variant="outlined"
-        >Feegrant</v-btn
+      <v-btn
+        class="me-2"
+        height="40"
+        variant="outlined"
+        :disabled="appStore.isLogged === false"
+        to="/fee-grants"
       >
+        Feegrant
+      </v-btn>
 
       <v-spacer></v-spacer>
       <v-btn
@@ -175,51 +181,40 @@
       opacity="0.9"
       persistent
     >
-      <v-card >
+      <v-card>
         <v-empty-state icon="$success">
           <template v-slot:media>
             <v-icon v-if="faucetDone" color="green"></v-icon>
           </template>
 
           <template v-slot:headline>
-              <v-progress-circular
-                v-if="!faucetDone"
-                indeterminate
-                :size="128"
-                class="mt-6"
-              ></v-progress-circular>
-            <div v-if="!faucetDone" class="text-h4 mt-4">
-              Wait from faucet
-            </div>
+            <v-progress-circular
+              v-if="!faucetDone"
+              indeterminate
+              :size="128"
+              class="mt-6"
+            ></v-progress-circular>
+            <div v-if="!faucetDone" class="text-h4 mt-4">Wait from faucet</div>
           </template>
 
           <template v-slot:title>
-            <div v-if="faucetDone" class="text-h6">
-              Everything's good!
-            </div>
+            <div v-if="faucetDone" class="text-h6">Everything's good!</div>
           </template>
 
           <template v-slot:text>
             <div v-if="faucetDone" class="text-medium-emphasis text-caption">
-             
-You've received some tokens to start using your wallet.
+              You've received some tokens to start using your wallet.
             </div>
           </template>
         </v-empty-state>
 
         <template v-slot:actions>
-          <v-btn
-            block
-            variant="text"
-            @click="dialogFaucet = false"
-          >
+          <v-btn block variant="text" @click="dialogFaucet = false">
             Close
           </v-btn>
         </template>
       </v-card>
     </v-dialog>
-
-
   </v-app>
 </template>
 <script>
@@ -295,6 +290,7 @@ export default defineComponent({
       await appStore.getBankModule();
       await appStore.getTransactions();
       await appStore.getAllValidators();
+      await appStore.getFeeGrantModule();
     });
     window.addEventListener("keplr_bitcoinAccountsChanged", async () => {
       await appStore.keplrConnect();
@@ -445,8 +441,7 @@ export default defineComponent({
       await appStore.getTransactions();
       await appStore.getAllValidators();
       await appStore.getAllPrice();
-
-      
+      await appStore.getFeeGrantModule();
 
       if (appStore.allWalletBalances.length === 0) {
         this.dialogFaucet = true;

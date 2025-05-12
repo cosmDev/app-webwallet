@@ -17,6 +17,8 @@ const vuetify = createVuetify({
   directives,
 });
 
+BigInt.prototype.toJSON = function() { return this.toString() }
+
 const app = createApp(App);
 
 app.use(createPinia());

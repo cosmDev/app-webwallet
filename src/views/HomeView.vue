@@ -4,7 +4,12 @@
   <v-container fluid>
     <v-row v-if="appStore.isLogged === true">
       <v-col cols="4">
-        <v-card border class="mx-auto my-4 rounded-lg" elevation="16" height="330">
+        <v-card
+          border
+          class="mx-auto my-4 rounded-lg"
+          elevation="16"
+          height="100%"
+        >
           <v-toolbar class="rounded-t-lg">
             <v-toolbar-title>Wallet info</v-toolbar-title>
           </v-toolbar>
@@ -82,7 +87,7 @@
           border
           class="mx-auto my-4 rounded-lg"
           elevation="16"
-          height="330"
+          height="100%"
           rounded
           :disabled="tab !== 1"
         >
@@ -154,8 +159,7 @@
           border
           class="mx-auto my-4 rounded-lg"
           elevation="16"
-          height="auto"
-          min-height="330"
+          height="100%"
           rounded
         >
           <v-toolbar class="rounded-t-lg">
@@ -265,7 +269,13 @@
     </v-row>
   </v-container>
   <v-container fluid>
-    <v-sheet v-if="appStore.isLogged === true" border rounded="lg" elevation="16">
+    <v-sheet
+      v-if="appStore.isLogged === true"
+      border
+      rounded="lg"
+      elevation="16"
+      height="100%"
+    >
       <v-toolbar class="rounded-t-lg">
         <v-toolbar-title>Last 10 transactions</v-toolbar-title>
       </v-toolbar>
@@ -291,17 +301,19 @@
                 >{{ item.titleMsg }}
               </v-chip>
             </td>
-            <td> 
-
-              {{ moment(item.timestamp).format('llll') }}
-              
-              <v-chip
-                class="ma-2"
-                label
-              >
-                {{ moment(item.timestamp).fromNow() }}
-              </v-chip>
-              
+            <td>
+              <v-row no-gutters>
+                <v-col cols="12" sm="6">
+                  <div class="mt-4">
+                    {{ moment(item.timestamp).format("llll") }}
+                  </div>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-chip class="ma-2" label>
+                    {{ moment(item.timestamp).fromNow() }}
+                  </v-chip>
+                </v-col>
+              </v-row>
             </td>
             <td v-if="item.finalData.amount?.data.amount">
               {{ item.finalData.amount?.data.amount / 1000000 }}
@@ -328,11 +340,7 @@
                 :color="cosmosConfig[appStore.setChainSelected].color"
                 class="ma-2"
                 label
-                :to="
-                  '/tx-details/' +
-  
-                  item.txhash
-                "
+                :to="'/tx-details/' + item.txhash"
               >
                 View detail
               </v-chip>
@@ -697,7 +705,7 @@ export default defineComponent({
           this.delegationStep2 = true;
         }
       }
-    }, 
+    },
     formatDate(date) {
       const options = {
         year: "numeric",

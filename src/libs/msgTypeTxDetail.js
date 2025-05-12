@@ -9,7 +9,7 @@ export function setMsg(msg, msgData, addrGet, timestamp, allVal, txHash) {
 
   switch (msg) {
     case "/cosmos.bank.v1beta1.MsgSend":
-        console.log('MsgSend', msgData);
+      console.log("MsgSend", msgData);
       if (msgData.to_address === addrGet) {
         typeReadable = "Receive";
       } else typeReadable = "Send";
@@ -26,14 +26,14 @@ export function setMsg(msg, msgData, addrGet, timestamp, allVal, txHash) {
       break;
     case "/cosmos.staking.v1beta1.MsgDelegate":
       foundVal = allVal.find(
-        (element) => element.operator_address === msgData.validator_address
+        (element) => element.operator_address === msgData.validator_address,
       );
       type = msg["@type"];
       typeReadable = "Delegate";
       color = "#f0a841";
       icon = "Stake.svg";
       finalHash = txHash;
-      
+
       msgData = {
         delegator_address: msgData.delegator_address,
         validator_address: foundVal?.description.moniker,
@@ -42,18 +42,18 @@ export function setMsg(msg, msgData, addrGet, timestamp, allVal, txHash) {
       break;
     case "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward":
       foundVal = allVal.find(
-        (element) => element.operator_address === msgData.validator_address
+        (element) => element.operator_address === msgData.validator_address,
       );
       type = msg["@type"];
       typeReadable = "Claim reward";
       color = "#6fffa3";
       icon = "ClaimRewards.svg";
-      finalHash = txHash; 
+      finalHash = txHash;
       msgData = {
         delegator_address: msgData.delegator_address,
         validator_address: foundVal?.description.moniker,
       };
-      
+
       break;
     case "/cosmos.staking.v1beta1.MsgUndelegate":
       /* foundVal = allVal.find(
@@ -69,7 +69,7 @@ export function setMsg(msg, msgData, addrGet, timestamp, allVal, txHash) {
         //validator_address: foundVal?.name,
         amount: msgData.amount.amount / 1000000,
       };
-      console.log('Unbond', msgData);
+      console.log("Unbond", msgData);
       break;
     case "/cosmos.gov.v1beta1.MsgSubmitProposal":
       type = msg["@type"];

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-sheet border class="ma-2 pa-2" rounded="lg">
+    <v-sheet border class="ma-2 pa-2" rounded="lg" elevation="16">
       <v-row no-gutters>
         <v-col cols="12" sm="6">
           <v-sheet class="text-h6 pa-2">All proposals</v-sheet>
@@ -24,53 +24,42 @@
             <td>{{ item.proposal_id }}</td>
             <td>{{ item.title }}</td>
             <td>
-              
-              <v-sheet class="pa-2"> 
+              <v-sheet class="pa-2">
                 <v-chip
-                v-if="item.status === 'PROPOSAL_STATUS_VOTING_PERIOD'" 
+                  v-if="item.status === 'PROPOSAL_STATUS_VOTING_PERIOD'"
                   color="orange"
                   text-color="white"
                   label
                 >
-                  <v-icon class="mr-1">
-                    mdi-checkbox-marked-circle
-                  </v-icon>
+                  <v-icon class="mr-1"> mdi-checkbox-marked-circle </v-icon>
                   PROPOSAL VOTING PERIOD
-                </v-chip> 
+                </v-chip>
                 <v-chip
-                v-if="item.status === 'PROPOSAL_STATUS_PASSED'" 
+                  v-if="item.status === 'PROPOSAL_STATUS_PASSED'"
                   color="green"
                   text-color="white"
                   label
                 >
-                  <v-icon class="mr-1">
-                    mdi-checkbox-marked-circle
-                  </v-icon>
+                  <v-icon class="mr-1"> mdi-checkbox-marked-circle </v-icon>
                   PROPOSAL PASSED
-                </v-chip>     
+                </v-chip>
                 <v-chip
-                v-if="item.status === 'PROPOSAL_STATUS_REJECTED'" 
+                  v-if="item.status === 'PROPOSAL_STATUS_REJECTED'"
                   color="red"
                   text-color="white"
                   label
                 >
-                  <v-icon class="mr-1">
-                    mdi-close-circle-outline
-                  </v-icon>
+                  <v-icon class="mr-1"> mdi-close-circle-outline </v-icon>
                   PROPOSAL REJECTED
-                </v-chip>             
-              </v-sheet>              
-              
-              </td>
+                </v-chip>
+              </v-sheet>
+            </td>
             <td>
-              {{ moment(item.voting_end_time).format('llll') }}
-              <v-chip
-                class="ma-2"
-                label
-              >
+              {{ moment(item.voting_end_time).format("llll") }}
+              <v-chip class="ma-2" label>
                 {{ moment(item.voting_end_time).fromNow() }}
               </v-chip>
-              </td>
+            </td>
 
             <td v-if="item.failed_reason == ''">
               <v-btn

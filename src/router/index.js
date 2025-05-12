@@ -3,7 +3,8 @@ import HomeView from "../views/HomeView.vue";
 import CreatePropView from "../views/CreatePropView.vue";
 import AllProposalsView from "../views/AllProposalsView.vue";
 import TxView from "../views/TxView.vue";
- 
+import Feegrant from "../views/Feegrant.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -22,10 +23,15 @@ const router = createRouter({
       name: "all-proposals",
       component: AllProposalsView,
     },
-        {
+    {
       path: "/tx-details/:txHash",
-      name: "tx-details", 
+      name: "tx-details",
       component: TxView,
+    },
+    {
+      path: "/fee-grants",
+      name: "fee-grants",
+      component: Feegrant,
     },
     {
       path: "/about",
