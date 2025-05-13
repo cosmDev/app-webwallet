@@ -17,7 +17,9 @@ const vuetify = createVuetify({
   directives,
 });
 
-BigInt.prototype.toJSON = function() { return this.toString() }
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
 
 const app = createApp(App);
 

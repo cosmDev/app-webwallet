@@ -24,7 +24,7 @@
                 <td>No data</td>
               </tr>
               <tr v-for="item in store.myFeeGrants" :key="item.name">
-                <td> 
+                <td>
                   <v-chip
                     v-if="
                       item.allowance.typeUrl ===
@@ -46,7 +46,7 @@
                     variant="outlined"
                   >
                     Periodic Allowance
-                  </v-chip>                  
+                  </v-chip>
                 </td>
                 <td>Me</td>
                 <td>
@@ -101,7 +101,7 @@
                     variant="outlined"
                   >
                     Periodic Allowance
-                  </v-chip>                  
+                  </v-chip>
                 </td>
                 <td>Me</td>
                 <td>
@@ -251,7 +251,12 @@
 
         <v-card-text>
           {{ resultError }}
-          <v-alert v-if="showHelp" closable title="Alert title" text="..."></v-alert>
+          <v-alert
+            v-if="showHelp"
+            closable
+            title="Alert title"
+            text="..."
+          ></v-alert>
           <v-tabs-window v-model="tab">
             <v-tabs-window-item value="one" class="mt-4">
               <div v-if="step1">
@@ -261,15 +266,14 @@
                   label="Gantee address"
                   placeholder="Enter address"
                   variant="outlined"
-   
                   append-icon="mdi-help-box-outline"
                   @click:append="showHelp = !showHelp"
                 >
-                  <v-tooltip
-                    activator="parent"
-                    location="top"
-                  >Grantee is the address of the user being granted an allowance of another user's funds.</v-tooltip>              
-              </v-text-field>
+                  <v-tooltip activator="parent" location="top"
+                    >Grantee is the address of the user being granted an
+                    allowance of another user's funds.</v-tooltip
+                  >
+                </v-text-field>
                 <v-text-field
                   v-model="amountFeeGrant"
                   :rules="[rules.required]"
@@ -283,22 +287,31 @@
                     location="top"
                     max-height="auto"
                     max-width="auto"
-                  >spend_limit is the limit of coins that are allowed to be used from the granter account.<br /> If it is empty, it assumes there's no spend limit, grantee can use any number of available coins from granter account address before the expiration.</v-tooltip>                 
-              
-              </v-text-field>
-                    <v-select
-                      v-model="periodFeeGrant"
-                      label="Select"
-                      variant="outlined" 
-                      :items="['Always', '1 minute', '1 hour', '1 day', '1 week', '1 month']"
-                    >
-                  <v-tooltip
-                    activator="parent"
-                    location="top"
-                  >specifies an optional time when this allowance expires. If the value is left empty, there is no expiry for the grant. </v-tooltip>                     
-                  </v-select> 
-
-                          
+                    >spend_limit is the limit of coins that are allowed to be
+                    used from the granter account.<br />
+                    If it is empty, it assumes there's no spend limit, grantee
+                    can use any number of available coins from granter account
+                    address before the expiration.</v-tooltip
+                  >
+                </v-text-field>
+                <v-select
+                  v-model="periodFeeGrant"
+                  label="Select"
+                  variant="outlined"
+                  :items="[
+                    'Always',
+                    '1 minute',
+                    '1 hour',
+                    '1 day',
+                    '1 week',
+                    '1 month',
+                  ]"
+                >
+                  <v-tooltip activator="parent" location="top"
+                    >specifies an optional time when this allowance expires. If
+                    the value is left empty, there is no expiry for the grant.
+                  </v-tooltip>
+                </v-select>
               </div>
 
               <div v-if="step2" class="ma-8 text-center">
@@ -342,7 +355,6 @@
                   :items="['1 hour', '1 day', '1 week', '1 month']"
                   v-model="periodFeeGrantPeriod"
                 ></v-select>
- 
               </div>
 
               <div v-if="step2" class="ma-8 text-center">
@@ -364,21 +376,19 @@
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card-text>
-      </v-card> 
+      </v-card>
       <v-btn
         v-if="step1"
         class="text-none ma-6"
         :color="cosmosConfig[0].color"
         prepend-icon="mdi-export-variant"
-        @click="tab == 'one' ? sendFeeGrant() : sendFeeGrantPeriodicAllowance()" 
+        @click="tab == 'one' ? sendFeeGrant() : sendFeeGrantPeriodicAllowance()"
         size="large"
         :text="tab == 'one' ? 'Send Fee Grant' : 'Send Periodic Allowance'"
       >
- 
       </v-btn>
     </v-card>
   </v-dialog>
- 
 </template>
 
 <script>
@@ -484,10 +494,11 @@ export default {
                 amount: (this.amountFeeGrant * 1000000).toString(),
               },
             ],
-            periodCanSpend: [ {
-              denom: cosmosConfig[0].coinLookup.chainDenom,
-              amount: (this.amountFeeGrant * 1000000).toString(),
-            }
+            periodCanSpend: [
+              {
+                denom: cosmosConfig[0].coinLookup.chainDenom,
+                amount: (this.amountFeeGrant * 1000000).toString(),
+              },
             ],
             periodReset: {
               seconds: 3600,
@@ -546,12 +557,12 @@ export default {
               {
                 denom: cosmosConfig[0].coinLookup.chainDenom,
                 amount: (this.amountFeeGrant * 1000000).toString(),
-              },            
+              },
             ],
             expiration: {
               seconds: Math.floor(Date.now() / 1000) + this.periodFeeGrant, // In 10 minutes
               nanos: 0,
-            }, 
+            },
           }).finish(),
         ),
       };
@@ -587,7 +598,6 @@ export default {
       }
     },
     dateSelectConvert() {
- 
       if (this.periodFeeGrant === "1 hour") {
         this.periodFeeGrant = 3600;
       } else if (this.periodFeeGrant === "1 minute") {
@@ -600,8 +610,7 @@ export default {
         this.periodFeeGrant = 604800;
       } else if (this.periodFeeGrant === "1 month") {
         this.periodFeeGrant = 2592000;
-      } 
- 
+      }
     },
     truncateString(str, num) {
       if (str.length <= num) {

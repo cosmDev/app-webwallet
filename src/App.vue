@@ -33,11 +33,19 @@
         </v-list>
       </v-menu>
 
-      <v-btn class="me-2" height="40" variant="outlined" to="/my-delegations">
+      <v-btn
+        class="me-2"
+        height="40"
+        variant="outlined"
+        to="/my-delegations"
+        :disabled="appStore.isLogged === false"
+      >
         My Delegations</v-btn
       >
 
-      <v-btn disabled class="me-2" height="40" variant="outlined">My Authz</v-btn>
+      <v-btn disabled class="me-2" height="40" variant="outlined"
+        >My Authz</v-btn
+      >
 
       <v-btn
         class="me-2"

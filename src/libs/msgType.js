@@ -15,7 +15,7 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
       );
       if (found) {
         data.amount[0].denom = found.viewDenom;
-      } 
+      }
       console.log("found", found);
 
       if (data.to_address === addrGet) {
