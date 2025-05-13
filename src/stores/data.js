@@ -76,6 +76,8 @@ export const useAppStore = defineStore("app", {
     btcAmount: 0,
 
     finalGroupPropMsg: [],
+
+    myDelegations: [],
   }),
   actions: {
     resetData() {
@@ -250,6 +252,9 @@ export const useAppStore = defineStore("app", {
         },
       });
 
+      let myDelegations = await queryStaking.DelegatorValidators({ delegatorAddr: this.addrWallet })
+ 
+
       let total = 0;
       let allUnbound = await queryStaking.DelegatorUnbondingDelegations({
         delegatorAddr: this.addrWallet,
@@ -272,6 +277,7 @@ export const useAppStore = defineStore("app", {
       this.totalDelegations = (total / 1000000).toFixed(2);
       this.totalUnbound = (totalUnbound / 1000000).toFixed(2);
       this.poolStaking = getPoolStaking.pool;
+      this.myDelegations = myDelegations.validators;
     },
     async getDistribModule() {
       const queryDistrib = new distrib.QueryClientImpl(this.rpcClient);

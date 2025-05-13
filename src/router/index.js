@@ -4,7 +4,8 @@ import CreatePropView from "../views/CreatePropView.vue";
 import AllProposalsView from "../views/AllProposalsView.vue";
 import TxView from "../views/TxView.vue";
 import Feegrant from "../views/Feegrant.vue";
-
+import DelegationsView from "../views/DelegationsView.vue";
+ 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,6 +29,12 @@ const router = createRouter({
       name: "tx-details",
       component: TxView,
     },
+        {
+      path: "/my-delegations",
+      name: "my-delegations",
+      component: DelegationsView,
+    },
+    
     {
       path: "/fee-grants",
       name: "fee-grants",

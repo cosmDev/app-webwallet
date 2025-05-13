@@ -33,11 +33,11 @@
         </v-list>
       </v-menu>
 
-      <v-btn disabled class="me-2" height="40" variant="outlined"
-        >Delegations</v-btn
+      <v-btn class="me-2" height="40" variant="outlined" to="/my-delegations">
+        My Delegations</v-btn
       >
 
-      <v-btn disabled class="me-2" height="40" variant="outlined">Authz</v-btn>
+      <v-btn disabled class="me-2" height="40" variant="outlined">My Authz</v-btn>
 
       <v-btn
         class="me-2"
@@ -46,7 +46,7 @@
         :disabled="appStore.isLogged === false"
         to="/fee-grants"
       >
-        Feegrant
+        My Feegrant
       </v-btn>
 
       <v-spacer></v-spacer>
@@ -438,6 +438,7 @@ export default defineComponent({
       await appStore.initRpc();
       await appStore.getAccountInfo();
       await appStore.getBankModule();
+      await appStore.getStakingModule();
       await appStore.getTransactions();
       await appStore.getAllValidators();
       await appStore.getAllPrice();

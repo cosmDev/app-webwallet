@@ -281,6 +281,8 @@
                   <v-tooltip
                     activator="parent"
                     location="top"
+                    max-height="auto"
+                    max-width="auto"
                   >spend_limit is the limit of coins that are allowed to be used from the granter account.<br /> If it is empty, it assumes there's no spend limit, grantee can use any number of available coins from granter account address before the expiration.</v-tooltip>                 
               
               </v-text-field>
