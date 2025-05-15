@@ -104,7 +104,7 @@
                 </td>
                 <td>
                   <v-btn 
-                    @click="dialogExecAuthz = true"
+                    @click="startExecAuthz(item.grantee, item.finalData.finalType)"
                   >Execute</v-btn>
                 </td>
               </tr>
@@ -204,19 +204,12 @@
         </v-toolbar>
         <v-card-text>
           <div v-if="step1">
-            <v-select
-              v-model="selectedAuhz"
-              label="Select authz"
-              :items="[
-                'Send',
-                'Delegate',
-                'Unbond',
-                'Redelegate',
-                'Vote',
-                'MultiSend',
-              ]"
+             <v-text-field  
+              disabled="true"
+              label="Gantee address"
+              placeholder="Enter address"
               variant="outlined"
-            ></v-select>
+            />
             <v-text-field
               v-model="authzSendGrantee"
               :rules="[rules.required, rules.bech32]"
@@ -307,6 +300,26 @@ export default {
     };
   },
   methods: {
+    async startExecAuthz(granter, msgType) {
+      this.dialogExecAuthz = true;
+      let signer = await selectSigner(this.store.setChainSelected);
+      const msgExec = {
+        typeUrl: "/cosmos.authz.v1beta1.MsgExec",
+        value: {
+          grantee: signer.accounts[0].address,
+          msgs: [
+            {
+              typeUrl: msgType,
+              value: {
+                granter: granter,
+                grantee: signer.accounts[0].address,
+              },
+            },
+          ],
+        },
+      };
+      console.log(msgExec);
+    },
     async sendAddAuthz() {
       this.step1 = false;
       this.step2 = true;

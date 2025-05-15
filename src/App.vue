@@ -313,9 +313,9 @@ export default defineComponent({
       appStore,
     };
   },
-  mounted() {
-    this.startConnect();
-  },
+  async beforeMount() {
+    await this.startConnect();
+  }, 
   methods: {
     selectDelValidator(item) {
       this.delegationStep1 = false;
