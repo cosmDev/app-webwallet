@@ -252,7 +252,7 @@ export default defineComponent({
       cosmosConfig,
       dialogFaucet: false,
       faucetDone: false,
-      theme: ref("light"),
+      theme: ref("dark"),
       publicPath: process.env.BASE_URL,
       dialogSend: false,
       dialogDelegate: false,
