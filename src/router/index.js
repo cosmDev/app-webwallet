@@ -5,6 +5,7 @@ import AllProposalsView from "../views/AllProposalsView.vue";
 import TxView from "../views/TxView.vue";
 import Feegrant from "../views/Feegrant.vue";
 import DelegationsView from "../views/DelegationsView.vue";
+import AuthzView from "../views/AuthzView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
       path: "/fee-grants",
       name: "fee-grants",
       component: Feegrant,
+    },
+    {
+      path: "/my-authz",
+      name: "my-authz",
+      component: AuthzView,
     },
     {
       path: "/about",

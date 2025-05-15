@@ -350,7 +350,7 @@
                   variant="outlined"
                 ></v-text-field>
                 <v-select
-                  label="Select"
+                  label="Select period"
                   variant="outlined"
                   :items="['1 hour', '1 day', '1 week', '1 month']"
                   v-model="periodFeeGrantPeriod"

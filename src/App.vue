@@ -1,12 +1,9 @@
 <template>
   <v-app :theme="theme" id="inspire">
     <v-app-bar height="72" flat>
-      <v-avatar
-        class="mx-2"
-        color="surface-variant"
-        size="32"
-        variant="flat"
-      ></v-avatar>
+      <v-avatar class="mx-2" size="32" variant="flat"
+        ><v-icon>mdi-atom</v-icon></v-avatar
+      >
 
       <v-btn class="me-2" height="40" variant="outlined" to="/">Home</v-btn>
 
@@ -43,8 +40,14 @@
         My Delegations</v-btn
       >
 
-      <v-btn disabled class="me-2" height="40" variant="outlined"
-        >My Authz</v-btn
+      <v-btn
+        class="me-2"
+        height="40"
+        variant="outlined"
+        to="/my-authz"
+        :disabled="appStore.isLogged === false"
+      >
+        My Authz</v-btn
       >
 
       <v-btn
@@ -299,6 +302,9 @@ export default defineComponent({
       await appStore.getTransactions();
       await appStore.getAllValidators();
       await appStore.getFeeGrantModule();
+      await appStore.getAuthzModule();
+
+      await this.startFaucet();
     });
     window.addEventListener("keplr_bitcoinAccountsChanged", async () => {
       await appStore.keplrConnect();
@@ -451,8 +457,13 @@ export default defineComponent({
       await appStore.getAllValidators();
       await appStore.getAllPrice();
       await appStore.getFeeGrantModule();
+      await appStore.getAuthzModule();
 
-      if (appStore.allWalletBalances.length === 0) {
+      await this.startFaucet();
+      console.log("Wallet connected");
+    },
+    async startFaucet() {
+      if (this.appStore.allWalletBalances.length === 0) {
         this.dialogFaucet = true;
         this.faucetDone = false;
         console.log("No wallet balances found.");

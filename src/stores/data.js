@@ -324,6 +324,11 @@ export const useAppStore = defineStore("app", {
       const queryAuthzResult = await queryAuthz.GranterGrants({
         granter: this.addrWallet,
       });
+      const queryAuthzResultGrantee = await queryAuthz.GranteeGrants({
+        grantee: this.addrWallet,
+      });
+
+      console.log("queryAuthzResultGrantee", queryAuthzResultGrantee);
 
       for (let i = 0; i < queryAuthzResult.grants.length; i++) {
         queryAuthzResult.grants[i].finaleAuthzType =
@@ -334,7 +339,21 @@ export const useAppStore = defineStore("app", {
         queryAuthzResult.grants[i].finalData = finalsTxs;
       }
 
-      this.allAuthz = queryAuthzResult.grants;
+      for (let i = 0; i < queryAuthzResultGrantee.grants.length; i++) {
+        queryAuthzResultGrantee.grants[i].finaleAuthzType =
+          GenericAuthorization.decode(
+            queryAuthzResultGrantee.grants[i].authorization.value,
+          );
+        let finalsTxs = setAuthzMsg(queryAuthzResultGrantee.grants[i].finaleAuthzType);
+        queryAuthzResultGrantee.grants[i].finalData = finalsTxs;
+      }
+
+      let finalAllAuthz = {
+        granter: queryAuthzResult.grants,
+        grantee: queryAuthzResultGrantee.grants,
+      };
+
+      this.allAuthz = finalAllAuthz;
     },
     async getFeeGrantModule() {
       const queryFeegrant = new feegrant.QueryClientImpl(this.rpcClient);
