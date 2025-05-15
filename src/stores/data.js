@@ -816,16 +816,16 @@ export const useAppStore = defineStore("app", {
       await window.keplr.enable(chainId);
       const offlineSigner = await window.getOfflineSignerAuto(chainId);
       const accounts = await offlineSigner.getAccounts();
-      const getKey = await window.keplr.getKey(chainId);
+      const getKey = await window.keplr?.getKey(chainId);
       this.addrWallet = accounts[0].address;
       this.nameWallet = getKey;
       this.isLogged = true;
 
-      let btcAddress = await window.bitcoin_keplr.connectWallet();
-      let btcAmount = await window.bitcoin_keplr.getBalance();
+      let btcAddress = await window.bitcoin_keplr?.connectWallet();
+      let btcAmount = await window.bitcoin_keplr?.getBalance();
 
-      let getNetwork = await window.bitcoin_keplr.getNetwork();
-      let getAccounts = await window.bitcoin_keplr.getAccounts();
+/*       let getNetwork = await window.bitcoin_keplr.getNetwork();
+      let getAccounts = await window.bitcoin_keplr.getAccounts(); */
 
       this.btcAddress = btcAddress;
       this.btcAmount = btcAmount;
