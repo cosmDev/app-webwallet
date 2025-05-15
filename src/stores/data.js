@@ -813,7 +813,7 @@ export const useAppStore = defineStore("app", {
       });
       let chainId = cosmosConfig[this.setChainSelected].chainId;
 
-      await window.keplr.enable(chainId);
+      await window.keplr?.enable(chainId);
       const offlineSigner = await window.getOfflineSignerAuto(chainId);
       const accounts = await offlineSigner.getAccounts();
       const getKey = await window.keplr?.getKey(chainId);
