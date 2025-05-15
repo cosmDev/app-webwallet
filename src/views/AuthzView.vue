@@ -306,12 +306,6 @@ export default {
       store,
     };
   },
-  async mounted() {
-    // Fetch data or perform any setup when the component is mounted
-    await this.store.getAuthzModule();
-
-    console.log("Authz module data:", this.store.allAuthz);
-  },
   methods: {
     async sendAddAuthz() {
       this.step1 = false;

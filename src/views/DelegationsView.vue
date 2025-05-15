@@ -47,9 +47,5 @@ export default {
       store,
     };
   },
-  async mounted() {
-    // Fetch data or perform any setup when the component is mounted
-    await this.store.getStakingModule();
-  },
 };
 </script>

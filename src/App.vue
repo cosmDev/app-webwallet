@@ -81,6 +81,10 @@
         color="grey"
         @click="onClick"
       ></v-btn>
+      <span 
+        class="me-6" 
+        >V{{ nodejsConfig.version }}</span
+      >
     </v-app-bar>
 
     <!--     <v-footer color="grey" height="44" app>
@@ -230,6 +234,7 @@
 </template>
 <script>
 import { ref, defineComponent } from "vue";
+import nodejsConfig from "../package.json";
 import { useAppStore } from "@/stores/data";
 import cosmosConfig from "./cosmos.config";
 import { selectSigner } from "@/libs/signer.js";
@@ -250,6 +255,7 @@ export default defineComponent({
   data() {
     return {
       cosmosConfig,
+      nodejsConfig,
       dialogFaucet: false,
       faucetDone: false,
       theme: ref("dark"),
@@ -295,16 +301,9 @@ export default defineComponent({
   },
   setup() {
     const appStore = useAppStore();
+    
     window.addEventListener("keplr_keystorechange", async () => {
-      await appStore.keplrConnect();
-      await appStore.getAccountInfo();
-      await appStore.getBankModule();
-      await appStore.getTransactions();
-      await appStore.getAllValidators();
-      await appStore.getFeeGrantModule();
-      await appStore.getAuthzModule();
-
-      await this.startFaucet();
+      await this.startConnect();
     });
     window.addEventListener("keplr_bitcoinAccountsChanged", async () => {
       await appStore.keplrConnect();
@@ -313,6 +312,9 @@ export default defineComponent({
     return {
       appStore,
     };
+  },
+  mounted() {
+    this.startConnect();
   },
   methods: {
     selectDelValidator(item) {
@@ -324,129 +326,11 @@ export default defineComponent({
     },
     onClick() {
       this.theme = this.theme === "light" ? "dark" : "light";
-    },
-    async sendToken() {
-      const appStore = useAppStore();
-      const signer = await selectSigner(0);
-      const finalMsg = {
-        typeUrl: "/cosmos.bank.v1beta1.MsgSend",
-        value: {
-          fromAddress: appStore.addrWallet,
-          toAddress: this.addressTo,
-          amount: [
-            {
-              denom: this.denom,
-              amount: this.amountSend.toString(),
-            },
-          ],
-        },
-      };
-      const finalFee = {
-        amount: [
-          {
-            denom: cosmosConfig.denom,
-            amount: "5000",
-          },
-        ],
-        gas: "200000",
-      };
-      this.dialogSend = true;
-
-      try {
-        const result = await signer.client.signAndBroadcast(
-          signer.accounts[0].address,
-          [finalMsg],
-          finalFee,
-          "",
-        );
-        console.log(result);
-        await appStore.getTransactions();
-        await appStore.getBankModule();
-        this.txResult = result;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async delegate() {
-      this.delegationStep1 = false;
-      this.delegationStep2 = true;
-
-      if (this.delegate) {
-        this.delegationStep1 = false;
-        this.delegationStep2 = true;
-
-        const signer = await selectSigner(0);
-        const foundMsgType = defaultRegistryTypes.find(
-          (element) => element[0] === "/cosmos.staking.v1beta1.MsgDelegate",
-        );
-        if (!foundMsgType) {
-          console.error("MsgDelegate not found in registry types");
-          return;
-        }
-        const finalAmount = {
-          denom:
-            cosmosConfig[this.appStore.setChainSelected].coinLookup.chainDenom,
-          amount: (this.delegateAmount * 1000000).toString(),
-        };
-        const finalMsg = {
-          typeUrl: foundMsgType[0],
-          value: foundMsgType[1].fromPartial({
-            delegatorAddress: signer.accounts[0].address,
-            validatorAddress: this.delegateTo,
-            amount: finalAmount,
-          }),
-        };
-
-        // Fee/Gas
-        const gasEstimation = await signer.client.simulate(
-          signer.accounts[0].address,
-          [finalMsg],
-          "Delegate Tokens",
-        );
-        const usedFee = calculateFee(
-          Math.round(
-            gasEstimation *
-              cosmosConfig[this.appStore.setChainSelected].feeMultiplier,
-          ),
-          GasPrice.fromString(
-            cosmosConfig[this.appStore.setChainSelected].gasPrice +
-              cosmosConfig[this.appStore.setChainSelected].coinLookup
-                .chainDenom,
-          ),
-        );
-        this.gasFee = {
-          fee: usedFee.amount[0].amount / 1000000,
-          gas: usedFee.gas,
-        };
-
-        const feeAmount = coins(
-          usedFee.amount[0].amount,
-          cosmosConfig[this.appStore.setChainSelected].coinLookup.chainDenom,
-        );
-        let finalFee = {
-          amount: feeAmount,
-          gas: usedFee.gas,
-          //granter: this.store.setFeePayer,
-        };
-        try {
-          const result = await signer.client.signAndBroadcast(
-            signer.accounts[0].address,
-            [finalMsg],
-            finalFee,
-            "",
-          );
-          console.log(result);
-          this.txResult = result;
-          this.delegationStep3 = false;
-          this.delegationStep4 = true;
-        } catch (error) {
-          console.error(error);
-          this.delegationStep3 = false;
-          this.delegationStep2 = true;
-        }
-      }
-    },
+    }, 
     async loginWallet() {
+      await this.startConnect();
+    },
+    async startConnect() {
       const appStore = useAppStore();
       await appStore.keplrConnect();
       await appStore.initRpc();

@@ -449,15 +449,7 @@ export default {
       store,
     };
   },
-  beforeMount() {
-    if (this.store.isLogged) {
-      this.store.getFeeGrantModule();
-    } else {
-      this.$router.push({
-        name: "home",
-      });
-    }
-  },
+ 
   methods: {
     async sendFeeGrantPeriodicAllowance() {
       this.step1 = false;
