@@ -753,7 +753,7 @@ export const useAppStore = defineStore("app", {
     },
 
     async keplrConnect() {
-      await window.keplr.experimentalSuggestChain({
+      await window.keplr?.experimentalSuggestChain({
         chainId: cosmosConfig[this.setChainSelected].chainId,
         chainName: cosmosConfig[this.setChainSelected].name,
         rpc: cosmosConfig[this.setChainSelected].rpcURL,
