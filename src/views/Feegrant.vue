@@ -519,7 +519,7 @@ export default {
           "auto",
           "",
         );
-        assertIsDeliverTxSuccess(result);
+ 
         console.log(result);
         this.txResult = result;
         this.step2 = false;
@@ -577,7 +577,7 @@ export default {
           "auto",
           "",
         );
-        assertIsDeliverTxSuccess(result);
+ 
         console.log(result);
         this.txResult = result;
         this.step2 = false;
