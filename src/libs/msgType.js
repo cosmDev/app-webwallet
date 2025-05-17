@@ -159,7 +159,11 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
       titleMsg = "Authz Revoke";
       //console.log(finalData)
       break;
-
+    case "/cosmos.authz.v1beta1.MsgExec":
+      titleMsg = "Authz Exec";
+      //console.log(finalData)
+      break;
+    
     case "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress":
       titleMsg = "Set Withdraw Address";
       //console.log(finalData)
