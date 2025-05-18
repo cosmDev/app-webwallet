@@ -22,7 +22,6 @@
             </thead>
             <tbody>
               <tr v-for="item in this.store.allAuthz.granter" :key="item.name">
- 
                 <td>
                   <v-chip label variant="outlined">
                     {{ item.finalData.titleMsg }}
@@ -47,10 +46,13 @@
                 </td>
                 <td>
                   <v-btn
-                    @click="sendRemoveAuthz(item.grantee, item.finalData.finalType)" 
+                    @click="
+                      sendRemoveAuthz(item.grantee, item.finalData.finalType)
+                    "
                     text
                   >
-                    <v-icon color="red">mdi-delete-forever-outline</v-icon> Remove
+                    <v-icon color="red">mdi-delete-forever-outline</v-icon>
+                    Remove
                   </v-btn>
                 </td>
               </tr>
@@ -62,7 +64,6 @@
         <v-sheet border min-height="400" class="ma-2" rounded="lg">
           <v-toolbar class="rounded-t-lg">
             <v-toolbar-title>Authz grantee</v-toolbar-title>
- 
           </v-toolbar>
           <v-table>
             <thead>
@@ -75,18 +76,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in this.store.allAuthz.grantee" :key="item.name" >
+              <tr v-for="item in this.store.allAuthz.grantee" :key="item.name">
                 <td>
-
                   <v-chip label variant="outlined">
                     {{ item.finalData.titleMsg }}
                   </v-chip>
                 </td>
                 <td>{{ item.granter }}</td>
-                <td>Me
-
-
-                </td>                
+                <td>Me</td>
                 <td>
                   <v-chip
                     v-if="item.expiration.seconds > 0"
@@ -103,9 +100,48 @@
                   </v-chip>
                 </td>
                 <td>
-                  <v-btn 
-                    @click="startExecAuthz(item.granter, item.finalData.finalType)"
-                  >Execute</v-btn>
+                  <v-btn
+                    @click="
+                      startExecAuthz(item.granter, item.finalData.finalType)
+                    "
+                    >Execute</v-btn
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-sheet>
+        <v-sheet border class="ma-2" rounded="lg">
+          <v-toolbar class="rounded-t-lg">
+            <v-toolbar-title>Authz grantee Txs</v-toolbar-title>
+          </v-toolbar>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-left">Type</th>
+                <th class="text-left">Executor</th>
+                <th class="text-left">Tx hash</th>
+                <th class="text-left"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in this.store.authzByGranter" :key="item.name">
+                <td>
+                  <v-chip label variant="outlined" class="mr-2"> AUTHZ </v-chip>
+                  <v-chip label variant="outlined">
+                    {{ item.decodedTx.titleMsg }}
+                  </v-chip>
+                </td>
+                <td>Me</td>
+                <td>
+                  <v-chip color="green" text-color="white" label>
+                    {{ truncate(item.txHash) }}
+                  </v-chip>
+                </td>
+                <td>
+                  <v-chip class="ma-2" label :to="'/tx-details/' + item.txHash">
+                    View detail
+                  </v-chip>
                 </td>
               </tr>
             </tbody>
@@ -197,111 +233,95 @@
       <v-card>
         <v-toolbar>
           <v-toolbar-title>Execute authz </v-toolbar-title>
- 
+
           <template v-slot:append>
             <v-btn icon="mdi-close" @click="dialogExecAuthz = false"></v-btn>
           </template>
         </v-toolbar>
         <v-card-text>
-
-          <v-chip
-            class="mb-4"
-            text-color="white"
-            label
-          >
+          <v-chip class="mb-4" text-color="white" label>
             {{ dialogExecAuthzType }}
           </v-chip>
- 
 
-        <div v-if="dialogExecAuthzType === '/cosmos.bank.v1beta1.MsgSend'">
-        <h4 class="ma-1">From address
-          <v-chip 
-            text-color="white"
-            label
-            size="small"
+          <div v-if="dialogExecAuthzType === '/cosmos.bank.v1beta1.MsgSend'">
+            <h4 class="ma-1">
+              From address
+              <v-chip text-color="white" label size="small"> Authz </v-chip>
+            </h4>
+
+            <v-text-field
+              v-model="dialogExecAuthzGranter"
+              required
+              variant="outlined"
+              disabled
+            ></v-text-field>
+            <v-text-field
+              v-model="sendToAddress"
+              label="To address"
+              required
+              variant="outlined"
+            ></v-text-field>
+            <v-row>
+              <v-col cols="12" md="8">
+                <div class="text-body-1">Amount to send</div>
+                <v-text-field
+                  v-model="amountMax"
+                  :disabled="denomSend !== '' ? false : true"
+                  required
+                  variant="outlined"
+                  suffix="Max"
+                  append-inner-icon="mdi-plus-box-outline"
+                  @click:append-inner="getMax()"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="4">
+                <div class="text-body-1">Select token</div>
+                <v-select
+                  v-model="denomSend"
+                  :items="allDenomsTokensAuthz"
+                  variant="outlined"
+                ></v-select>
+              </v-col>
+            </v-row>
+
+            <v-btn elevation="2" block @click="execAuthz"
+              >Send authz token</v-btn
+            >
+          </div>
+
+          <div
+            v-if="dialogExecAuthzType === '/cosmos.staking.v1beta1.MsgDelegate'"
           >
-            Authz
-          </v-chip>
-
-        </h4>
-
-
-        <v-text-field
-          v-model="dialogExecAuthzGranter"
- 
-          required
-          variant="outlined"
-          disabled
-        ></v-text-field>
-        <v-text-field
-          v-model="sendToAddress"
-          label="To address"
-          required
-          variant="outlined"
-        ></v-text-field>
-          <v-row>
-            <v-col cols="12" md="8">
-              <div class="text-body-1">Amount to send</div>
-              <v-text-field
-                v-model="amountMax" 
-                :disabled="denomSend !== '' ? false : true"
-                required
-                variant="outlined"
-                suffix="Max"
-                append-inner-icon="mdi-plus-box-outline"
-                @click:append-inner="getMax()"
-              ></v-text-field>
-            </v-col>
-
-            <v-col cols="12" md="4">
-              <div class="text-body-1">Select token</div>
-              <v-select
-                v-model="denomSend"
-                :items="allDenomsTokensAuthz"
-                variant="outlined"
-              ></v-select>
-            </v-col>
-          </v-row>        
- 
-        <v-btn elevation="2" block @click="execAuthz">Send authz token</v-btn>
- 
-        </div>
-
-
-        <div v-if="dialogExecAuthzType === '/cosmos.staking.v1beta1.MsgDelegate'">
-          <div class="text-body-1 ml-1">From address</div>
-          <v-text-field
-            v-model="dialogExecAuthzGranter" 
-            required
-            variant="outlined"
-            disabled
-          ></v-text-field>
-          <div class="text-body-1 ml-1">To validator address</div>
-          <v-text-field
-            v-model="toAddress"
-            required
-            variant="outlined"
-          ></v-text-field>
-          <div class="text-body-1 ml-1">Amount</div>
-          <v-text-field
-            v-model="amountMax" 
-            required
-            variant="outlined"
-            suffix="Max"
-            append-inner-icon="mdi-plus-box-outline"
-            @click:append-inner="getMax()"
-          ></v-text-field> 
-          <v-btn elevation="2" block @click="execAuthz">Send authz delegation</v-btn> 
-        </div>
-
-
-
- 
+            <div class="text-body-1 ml-1">From address</div>
+            <v-text-field
+              v-model="dialogExecAuthzGranter"
+              required
+              variant="outlined"
+              disabled
+            ></v-text-field>
+            <div class="text-body-1 ml-1">To validator address</div>
+            <v-text-field
+              v-model="toAddress"
+              required
+              variant="outlined"
+            ></v-text-field>
+            <div class="text-body-1 ml-1">Amount</div>
+            <v-text-field
+              v-model="amountMax"
+              required
+              variant="outlined"
+              suffix="Max"
+              append-inner-icon="mdi-plus-box-outline"
+              @click:append-inner="getMax()"
+            ></v-text-field>
+            <v-btn elevation="2" block @click="execAuthz"
+              >Send authz delegation</v-btn
+            >
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
-
-
   </v-container>
 </template>
 
@@ -358,6 +378,9 @@ export default {
       store,
     };
   },
+  async mounted() {
+    await this.store.getAuthzByGranter("/cosmos.authz.v1beta1.MsgExec");
+  },
   methods: {
     async execAuthz() {
       console.log("this.store.setChainSelected", this.store.setChainSelected);
@@ -377,21 +400,27 @@ export default {
       if (this.dialogExecAuthzType === "/cosmos.bank.v1beta1.MsgSend") {
         finalMessage = {
           typeUrl: this.dialogExecAuthzType,
-            value: await (await import("cosmjs-types/cosmos/bank/v1beta1/tx")).MsgSend.encode(
-            (await import("cosmjs-types/cosmos/bank/v1beta1/tx")).MsgSend.fromPartial({
+          value: await (
+            await import("cosmjs-types/cosmos/bank/v1beta1/tx")
+          ).MsgSend.encode(
+            (
+              await import("cosmjs-types/cosmos/bank/v1beta1/tx")
+            ).MsgSend.fromPartial({
               fromAddress: this.dialogExecAuthzGranter,
               toAddress: this.sendToAddress,
               amount: [
-              {
-                denom: this.denomSend,
-                amount: this.amountMax,
-              },
+                {
+                  denom: this.denomSend,
+                  amount: this.amountMax,
+                },
               ],
-            })
-            ).finish(),
+            }),
+          ).finish(),
         };
         console.log("msgSend:", finalMessage);
-      } else if (this.dialogExecAuthzType === "/cosmos.staking.v1beta1.MsgDelegate") {
+      } else if (
+        this.dialogExecAuthzType === "/cosmos.staking.v1beta1.MsgDelegate"
+      ) {
         finalMessage = {
           typeUrl: this.dialogExecAuthzType,
           value: {
@@ -404,8 +433,9 @@ export default {
           },
         };
         console.log("msgDelegate:", finalMessage);
-      }
-      else if (this.dialogExecAuthzType === "/cosmos.staking.v1beta1.MsgUndelegate") {
+      } else if (
+        this.dialogExecAuthzType === "/cosmos.staking.v1beta1.MsgUndelegate"
+      ) {
         finalMessage = {
           typeUrl: this.dialogExecAuthzType,
           value: {
@@ -418,7 +448,10 @@ export default {
           },
         };
         console.log("msgUndelegate:", finalMessage);
-      } else if (this.dialogExecAuthzType === "/cosmos.staking.v1beta1.MsgBeginRedelegate") {
+      } else if (
+        this.dialogExecAuthzType ===
+        "/cosmos.staking.v1beta1.MsgBeginRedelegate"
+      ) {
         finalMessage = {
           typeUrl: this.dialogExecAuthzType,
           value: {
@@ -460,7 +493,7 @@ export default {
           signer.accounts[0].address,
           [msgExec],
           "auto",
-          ""
+          "",
         );
         console.log(result);
         await this.store.getAuthzModule();
@@ -482,16 +515,17 @@ export default {
       this.amountMax = "";
       this.sendToAddress = "";
 
-          const axios = (await import("axios")).default;
-          const url = this.cosmosConfig[0].apiURL + `/cosmos/bank/v1beta1/balances/${granter}`;
-          const { data } = await axios.get(url);
-          for (let i = 0; i < data.balances.length; i++) {
-            const denom = data.balances[i].denom;
-            this.allDenomsTokensAuthz.push(denom);
-          }
+      const axios = (await import("axios")).default;
+      const url =
+        this.cosmosConfig[0].apiURL +
+        `/cosmos/bank/v1beta1/balances/${granter}`;
+      const { data } = await axios.get(url);
+      for (let i = 0; i < data.balances.length; i++) {
+        const denom = data.balances[i].denom;
+        this.allDenomsTokensAuthz.push(denom);
+      }
 
-
-/*       let signer = await selectSigner(this.store.setChainSelected);
+      /*       let signer = await selectSigner(this.store.setChainSelected);
 
       const foundMsgType = defaultRegistryTypes.find(
         (element) => element[0] === msgType,
@@ -585,7 +619,7 @@ export default {
           [finalMsg],
           "auto",
           "",
-        ); 
+        );
         console.log(result);
         await this.store.getAuthzModule();
         this.txResult = result;
@@ -615,16 +649,15 @@ export default {
           [msgRevoke],
           "auto",
           "",
-        ); 
+        );
         console.log(result);
         await this.store.getAuthzModule();
-        this.txResult = result; 
+        this.txResult = result;
       } catch (error) {
         console.error(error);
         this.step2 = false;
         this.step1 = true;
       }
-
     },
     getMax() {
       // Use axios to fetch the balance for dialogExecAuthzGranter
@@ -638,7 +671,9 @@ export default {
         try {
           const axios = (await import("axios")).default;
           // Replace with your actual REST endpoint
-          const url = this.cosmosConfig[0].apiURL + `/cosmos/bank/v1beta1/balances/${address}`;
+          const url =
+            this.cosmosConfig[0].apiURL +
+            `/cosmos/bank/v1beta1/balances/${address}`;
           const { data } = await axios.get(url);
           const balanceObj = data.balances.find((b) => b.denom === denom);
           this.amountMax = balanceObj ? balanceObj.amount : "0";
@@ -648,7 +683,21 @@ export default {
         }
       });
     },
-    
+    truncate(
+      fullStr,
+      strLen = 8,
+      separator = "...",
+      frontChars = 3,
+      backChars = 4,
+    ) {
+      if (fullStr.length <= strLen) return fullStr;
+
+      return (
+        fullStr.substr(0, frontChars) +
+        separator +
+        fullStr.substr(fullStr.length - backChars)
+      );
+    },
     dateSelectConvert() {
       if (this.periodAuthzGrantPeriod === "1 hour") {
         this.periodAuthzGrantPeriod = 3600;

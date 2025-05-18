@@ -16,7 +16,6 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
       if (found) {
         data.amount[0].denom = found.viewDenom;
       }
-      console.log("found", found);
 
       if (data.to_address === addrGet) {
         titleMsg = "Receive";
@@ -163,7 +162,7 @@ export function setMsg(data, addrGet, timestamp, txhash, all) {
       titleMsg = "Authz Exec";
       //console.log(finalData)
       break;
-    
+
     case "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress":
       titleMsg = "Set Withdraw Address";
       //console.log(finalData)

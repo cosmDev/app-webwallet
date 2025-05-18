@@ -449,7 +449,7 @@ export default {
       store,
     };
   },
- 
+
   methods: {
     async sendFeeGrantPeriodicAllowance() {
       this.step1 = false;
@@ -519,7 +519,7 @@ export default {
           "auto",
           "",
         );
- 
+
         console.log(result);
         this.txResult = result;
         this.step2 = false;
@@ -577,7 +577,7 @@ export default {
           "auto",
           "",
         );
- 
+
         console.log(result);
         this.txResult = result;
         this.step2 = false;

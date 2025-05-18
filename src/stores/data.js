@@ -7,6 +7,7 @@ import {
   QueryClient,
   defaultRegistryTypes,
 } from "@cosmjs/stargate";
+import { toUtf8, fromUtf8, toHex } from "@cosmjs/encoding";
 import { Tendermint37Client } from "@cosmjs/tendermint-rpc";
 import Long from "long";
 import bech32 from "bech32";
@@ -82,6 +83,9 @@ export const useAppStore = defineStore("app", {
     finalGroupPropMsg: [],
 
     myDelegations: [],
+
+    // authz
+    authzByGranter: [],
   }),
   actions: {
     resetData() {
@@ -328,7 +332,7 @@ export const useAppStore = defineStore("app", {
         grantee: this.addrWallet,
       });
 
-      console.log("queryAuthzResultGrantee", queryAuthzResultGrantee);
+      //console.log("queryAuthzResultGrantee", queryAuthzResultGrantee);
 
       for (let i = 0; i < queryAuthzResult.grants.length; i++) {
         queryAuthzResult.grants[i].finaleAuthzType =
@@ -344,7 +348,9 @@ export const useAppStore = defineStore("app", {
           GenericAuthorization.decode(
             queryAuthzResultGrantee.grants[i].authorization.value,
           );
-        let finalsTxs = setAuthzMsg(queryAuthzResultGrantee.grants[i].finaleAuthzType);
+        let finalsTxs = setAuthzMsg(
+          queryAuthzResultGrantee.grants[i].finaleAuthzType,
+        );
         queryAuthzResultGrantee.grants[i].finalData = finalsTxs;
       }
 
@@ -366,9 +372,6 @@ export const useAppStore = defineStore("app", {
       this.myFeeGrants = queryAllowancesByGranterResult.allowances;
 
       for (let i = 0; i < this.myFeeGrants.length; i++) {
-        console.log("this.myFeeGrants", this.myFeeGrants[i].allowance);
-        console.log("feegrantData", feegrantType);
-
         if (
           this.myFeeGrants[i].allowance.typeUrl ===
           "/cosmos.feegrant.v1beta1.BasicAllowance"
@@ -392,8 +395,6 @@ export const useAppStore = defineStore("app", {
       let finalGranter = [];
       for (let i = 0; i < this.myFeeAllowances.length; i++) {
         finalGranter[i] = this.myFeeAllowances[i].granter;
-        console.log("myFeeAllowances", this.myFeeAllowances[i].allowance);
-        console.log("feegrantData", feegrantType);
 
         if (
           this.myFeeAllowances[i].allowance.typeUrl ===
@@ -675,6 +676,61 @@ export const useAppStore = defineStore("app", {
       this.finalStats = finalStats;
       // commit('updateChainsStats', finalStats)
     },
+    async getAuthzByGranter(msgType) {
+      await this.initRpc();
+      let finalDataAuthzTxs = [];
+
+      const queryCustom = buildQuery({
+        tags: [
+          { key: "message.sender", value: this.addrWallet },
+          { key: "message.action", value: msgType }, // "exec" is the action for MsgExec (authz)
+        ],
+      });
+      let resultQueryCustom = await this.rpcBase.txSearch({
+        query: queryCustom,
+        page: 1,
+        per_page: 5,
+        order_by: "desc",
+      });
+      console.log("resultQueryCustom", resultQueryCustom);
+      for (let i of resultQueryCustom.txs) {
+        const decoded = decodeTxRaw(i.tx);
+
+        console.log("decoded", decoded);
+
+        const foundMsgType = defaultRegistryTypes.find(
+          (element) => element[0] === decoded.body.messages[0].typeUrl,
+        );
+        let finalType = foundMsgType[1].decode(decoded.body.messages[0].value);
+
+        const foundAuthzMsgType = defaultRegistryTypes.find(
+          (element) => element[0] === finalType.msgs[0].typeUrl,
+        );
+
+        let finalAuthzMsgType = foundAuthzMsgType[1].decode(
+          finalType.msgs[0].value,
+        );
+
+        let formatMsg = {
+          msg: finalType.msgs[0].typeUrl,
+        };
+
+        let finalData = setAuthzMsg(formatMsg);
+        finalDataAuthzTxs.push({
+          txHash: toHex(i.hash).toUpperCase(),
+          blockTime: i.timestamp,
+          status: i.code,
+          log: i.raw_log,
+          decodedTx: finalData,
+          decoded: decoded,
+          finalType: finalType,
+          finalAuthzMsgType: finalAuthzMsgType,
+        });
+
+        console.log("finalDataAuthzTxs", finalDataAuthzTxs);
+      }
+      this.authzByGranter = finalDataAuthzTxs;
+    },
     /*async getTransactions() {
       const queryDelegate = buildQuery({
         tags: [
@@ -824,7 +880,7 @@ export const useAppStore = defineStore("app", {
       let btcAddress = await window.bitcoin_keplr?.connectWallet();
       let btcAmount = await window.bitcoin_keplr?.getBalance();
 
-/*       let getNetwork = await window.bitcoin_keplr.getNetwork();
+      /*       let getNetwork = await window.bitcoin_keplr.getNetwork();
       let getAccounts = await window.bitcoin_keplr.getAccounts(); */
 
       this.btcAddress = btcAddress;

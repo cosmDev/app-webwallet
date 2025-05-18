@@ -81,10 +81,7 @@
         color="grey"
         @click="onClick"
       ></v-btn>
-      <span 
-        class="me-6" 
-        >V{{ nodejsConfig.version }}</span
-      >
+      <span class="me-6">V{{ nodejsConfig.version }}</span>
     </v-app-bar>
 
     <!--     <v-footer color="grey" height="44" app>
@@ -301,7 +298,7 @@ export default defineComponent({
   },
   setup() {
     const appStore = useAppStore();
-    
+
     window.addEventListener("keplr_keystorechange", async () => {
       await this.startConnect();
     });
@@ -315,7 +312,7 @@ export default defineComponent({
   },
   async beforeMount() {
     await this.startConnect();
-  }, 
+  },
   methods: {
     selectDelValidator(item) {
       this.delegationStep1 = false;
@@ -326,7 +323,7 @@ export default defineComponent({
     },
     onClick() {
       this.theme = this.theme === "light" ? "dark" : "light";
-    }, 
+    },
     async loginWallet() {
       await this.startConnect();
     },
