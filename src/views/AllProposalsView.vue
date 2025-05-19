@@ -26,6 +26,15 @@
             <td>
               <v-sheet class="pa-2">
                 <v-chip
+                  v-if="item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD'"
+                  color="blue"
+                  text-color="white"
+                  label
+                >
+                  <v-icon class="mr-1"> mdi-clock </v-icon>
+                  PROPOSAL DEPOSIT PERIOD
+                </v-chip>
+                <v-chip
                   v-if="item.status === 'PROPOSAL_STATUS_VOTING_PERIOD'"
                   color="orange"
                   text-color="white"
@@ -67,6 +76,12 @@
                 @click="openDialVote(item.proposal_id)"
               >
                 Vote
+              </v-btn>
+              <v-btn
+                v-if="item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD'"
+                 
+              >
+                Deposite (Soon)
               </v-btn>
             </td>
             <td v-else>{{ item.failed_reason }}</td>

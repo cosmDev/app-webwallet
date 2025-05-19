@@ -59,7 +59,44 @@
             </tbody>
           </v-table>
         </v-sheet>
+                <v-sheet border class="ma-2" rounded="lg">
+          <v-toolbar class="rounded-t-lg">
+            <v-toolbar-title>Authz grantee Txs</v-toolbar-title>
+          </v-toolbar>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-left">Type</th>
+                <th class="text-left">Executor</th>
+                <th class="text-left">Tx hash</th>
+                <th class="text-left"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in this.store.authzByGrantee" :key="item.name">
+                <td>
+                  <v-chip label variant="outlined" class="mr-2"> AUTHZ </v-chip>
+                  <v-chip label variant="outlined">
+                    {{ item.decodedTx.titleMsg }}
+                  </v-chip>
+                </td>
+                <td>Me</td>
+                <td>
+                  <v-chip color="green" text-color="white" label>
+                    {{ truncate(item.txHash) }}
+                  </v-chip>
+                </td>
+                <td>
+                  <v-chip class="ma-2" label :to="'/tx-details/' + item.txHash">
+                    View detail
+                  </v-chip>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-sheet>
       </v-col>
+      
       <v-col cols="12" md="6">
         <v-sheet border min-height="400" class="ma-2" rounded="lg">
           <v-toolbar class="rounded-t-lg">
@@ -125,7 +162,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in this.store.authzByGranter" :key="item.name">
+              <tr v-for="item in this.store.authzByGrantee" :key="item.name">
                 <td>
                   <v-chip label variant="outlined" class="mr-2"> AUTHZ </v-chip>
                   <v-chip label variant="outlined">
@@ -337,6 +374,7 @@ import {
   GrantAuthorization,
 } from "cosmjs-types/cosmos/authz/v1beta1/authz";
 import { MsgRevoke } from "cosmjs-types/cosmos/authz/v1beta1/tx";
+
 import cosmosConfig from "@/cosmos.config";
 import moment from "moment";
 
@@ -379,7 +417,8 @@ export default {
     };
   },
   async mounted() {
-    await this.store.getAuthzByGranter("/cosmos.authz.v1beta1.MsgExec");
+    await this.store.getAuthzByGrantee("/cosmos.authz.v1beta1.MsgExec");
+    //await this.store.getAuthzByGranter("dev13lgr3vr5rpcuv3my9qutknz246kz6fpgq53ts9", "/cosmos.authz.v1beta1.MsgExec");
   },
   methods: {
     async execAuthz() {

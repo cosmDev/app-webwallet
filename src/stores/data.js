@@ -85,6 +85,7 @@ export const useAppStore = defineStore("app", {
     myDelegations: [],
 
     // authz
+    authzByGrantee: [],
     authzByGranter: [],
   }),
   actions: {
@@ -332,7 +333,7 @@ export const useAppStore = defineStore("app", {
         grantee: this.addrWallet,
       });
 
-      //console.log("queryAuthzResultGrantee", queryAuthzResultGrantee);
+      console.log("queryAuthzResult", queryAuthzResult);
 
       for (let i = 0; i < queryAuthzResult.grants.length; i++) {
         queryAuthzResult.grants[i].finaleAuthzType =
@@ -341,6 +342,11 @@ export const useAppStore = defineStore("app", {
           );
         let finalsTxs = setAuthzMsg(queryAuthzResult.grants[i].finaleAuthzType);
         queryAuthzResult.grants[i].finalData = finalsTxs;
+
+        console.log('test', queryAuthzResult.grants[i].grantee);
+
+        this.getAuthzByGranter(queryAuthzResult.grants[i].grantee, "/cosmos.authz.v1beta1.MsgExec");
+
       }
 
       for (let i = 0; i < queryAuthzResultGrantee.grants.length; i++) {
@@ -676,14 +682,15 @@ export const useAppStore = defineStore("app", {
       this.finalStats = finalStats;
       // commit('updateChainsStats', finalStats)
     },
-    async getAuthzByGranter(msgType) {
+
+    async getAuthzByGranter(grantee, msgType) {
       await this.initRpc();
       let finalDataAuthzTxs = [];
 
       const queryCustom = buildQuery({
         tags: [
-          { key: "message.sender", value: this.addrWallet },
-          { key: "message.action", value: msgType }, // "exec" is the action for MsgExec (authz)
+          { key: "message.sender", value: grantee },
+          { key: "message.action", value: msgType },
         ],
       });
       let resultQueryCustom = await this.rpcBase.txSearch({
@@ -692,11 +699,11 @@ export const useAppStore = defineStore("app", {
         per_page: 5,
         order_by: "desc",
       });
+
       console.log("resultQueryCustom", resultQueryCustom);
+
       for (let i of resultQueryCustom.txs) {
         const decoded = decodeTxRaw(i.tx);
-
-        console.log("decoded", decoded);
 
         const foundMsgType = defaultRegistryTypes.find(
           (element) => element[0] === decoded.body.messages[0].typeUrl,
@@ -726,10 +733,62 @@ export const useAppStore = defineStore("app", {
           finalType: finalType,
           finalAuthzMsgType: finalAuthzMsgType,
         });
-
-        console.log("finalDataAuthzTxs", finalDataAuthzTxs);
       }
+
+      console.log("finalDataAuthzTxs", finalDataAuthzTxs);
       this.authzByGranter = finalDataAuthzTxs;
+    },
+
+    
+    async getAuthzByGrantee(msgType) {
+      await this.initRpc();
+      let finalDataAuthzTxs = [];
+
+      const queryCustom = buildQuery({
+        tags: [
+          { key: "message.sender", value: this.addrWallet },
+          { key: "message.action", value: msgType }, // "exec" is the action for MsgExec (authz)
+        ],
+      });
+      let resultQueryCustom = await this.rpcBase.txSearch({
+        query: queryCustom,
+        page: 1,
+        per_page: 5,
+        order_by: "desc",
+      }); 
+      for (let i of resultQueryCustom.txs) {
+        const decoded = decodeTxRaw(i.tx); 
+
+        const foundMsgType = defaultRegistryTypes.find(
+          (element) => element[0] === decoded.body.messages[0].typeUrl,
+        );
+        let finalType = foundMsgType[1].decode(decoded.body.messages[0].value);
+
+        const foundAuthzMsgType = defaultRegistryTypes.find(
+          (element) => element[0] === finalType.msgs[0].typeUrl,
+        );
+
+        let finalAuthzMsgType = foundAuthzMsgType[1].decode(
+          finalType.msgs[0].value,
+        );
+
+        let formatMsg = {
+          msg: finalType.msgs[0].typeUrl,
+        };
+
+        let finalData = setAuthzMsg(formatMsg);
+        finalDataAuthzTxs.push({
+          txHash: toHex(i.hash).toUpperCase(),
+          blockTime: i.timestamp,
+          status: i.code,
+          log: i.raw_log,
+          decodedTx: finalData,
+          decoded: decoded,
+          finalType: finalType,
+          finalAuthzMsgType: finalAuthzMsgType,
+        }); 
+      }
+      this.authzByGrantee = finalDataAuthzTxs;
     },
     /*async getTransactions() {
       const queryDelegate = buildQuery({
