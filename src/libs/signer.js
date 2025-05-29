@@ -1,10 +1,7 @@
 import {
   defaultRegistryTypes,
-  assertIsDeliverTxSuccess,
   SigningStargateClient,
-  SigningStargateClientOptions,
   GasPrice,
-  calculateFee,
 } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import cosmosConfig from "@/cosmos.config";
@@ -24,6 +21,8 @@ export async function selectSigner(chain) {
     "/cosmos.distribution.v1beta1.MsgCommunityPoolSpend",
     MsgCommunityPoolSpend,
   );
+
+ 
 
   console.log("cosmosConfig", chain);
   // Keplr connect

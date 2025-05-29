@@ -298,20 +298,18 @@ export default defineComponent({
   },
   setup() {
     const appStore = useAppStore();
-
-    window.addEventListener("keplr_keystorechange", async () => {
-      await this.startConnect();
-    });
-    window.addEventListener("keplr_bitcoinAccountsChanged", async () => {
-      await appStore.keplrConnect();
-    });
-
     return {
       appStore,
     };
   },
   async beforeMount() {
     await this.startConnect();
+    window.addEventListener("keplr_keystorechange", async () => {
+      await this.startConnect();
+    });
+    window.addEventListener("keplr_bitcoinAccountsChanged", async () => {
+      await appStore.keplrConnect();
+    });    
   },
   methods: {
     selectDelValidator(item) {
@@ -348,6 +346,8 @@ export default defineComponent({
         this.dialogFaucet = true;
         this.faucetDone = false;
         console.log("No wallet balances found.");
+        console.log("Start faucet...");
+        const appStore = useAppStore();
         await axios
           .get(
             `https://cosmos-api.cosmdev.com/faucet/chaindev/${appStore.addrWallet}`,

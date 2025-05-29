@@ -79,7 +79,7 @@
               </v-btn>
               <v-btn
                 v-if="item.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD'"
-                 
+                @click="openDialDeposit(item.proposal_id)"
               >
                 Deposite (Soon)
               </v-btn>
@@ -148,6 +148,8 @@ export default {
     return {
       moment: moment,
       dialog: false,
+      openDialDeposit: false,
+      depositAmount: 0,
       proposalType: "",
       proposalTypes: [
         "text",
@@ -170,6 +172,10 @@ export default {
     console.log("AllProposalsView mounted", this.appStore.allProposals);
   },
   methods: {
+    openDialDeposit(id) {
+      this.openDialDeposit = true;
+      this.proposalDetails = id;
+    },
     openDialVote(id) {
       this.dialog = true;
       this.proposalDetails = id;
